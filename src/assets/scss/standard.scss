@@ -1,0 +1,381 @@
+@import "variables";
+
+.sf-content-page {
+  transition: margin-left 0.15s ease;
+  margin-left: 500px;
+  padding: 3.6rem 2rem;
+}
+
+input,
+select {
+  font-size: 1.2rem;
+  font-family: "Nunito Sans", sans-serif;
+  color: #4d4d4d;
+  background-color: #ffffff;
+  width: 100%;
+  display: block;
+  height: 46px;
+  padding: 0 1rem;
+  border-radius: 4px;
+  border: 1px solid #d1d1d1;
+}
+
+input:disabled {
+  background-color: $buttonDisableBgColor;
+}
+
+textarea {
+  font-size: 0.875rem;
+  font-family: "Nunito Sans", sans-serif;
+  color: #4d4d4d;
+  background-color: #ffffff;
+  width: 100%;
+  display: block;
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid #d1d1d1;
+  resize: none;
+}
+
+input[type="range"] {
+  height: fit-content !important;
+}
+
+.sf-form-100 {
+  width: calc(100% + 24px);
+}
+
+/* Input Radio */
+.form-selectradio,
+.form-selectcheckbox {
+  display: flex;
+}
+
+.form-selectradiobutton,
+.form-selectcheckboxbutton {
+  display: inline-block;
+  border-radius: 50%;
+  margin: 0;
+}
+
+.form-selectradiobutton label,
+.form-selectcheckboxbutton label {
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 16px 0 8px;
+  vertical-align: middle;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  position: relative;
+  border-radius: 50%;
+  line-height: 16px;
+  cursor: pointer;
+  margin: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+input[type="checkbox"] {
+  border-radius: 6px;
+}
+
+// Renderização de Consulta - Botão
+
+.sf-action-rendered-content {
+  gap: 8px;
+  .sf-action-rendered-consult {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    white-space: nowrap;
+    width: auto;
+    span {
+      cursor: pointer;
+      &:hover {
+        // background-color: #27272736 !important;
+        border-color: #272727 !important;
+      }
+      &.actived {
+        // background-color: #00b8d436 !important;
+        border-color: #00b8d4 !important;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// Renderização de Consulta - Botão
+
+// Conteúdo socio resultado
+
+.sf-card-socio-content {
+  gap: 12px;
+  .sf-card-socio {
+    width: 100%;
+    &.actived {
+      div {
+        background-color: #1fbdd538;
+        border-color: #00b8d4 !important;
+        color: #0395ac;
+      }
+    }
+    &:hover {
+      div {
+        border-color: #00b8d4 !important;
+        color: #0395ac;
+        cursor: pointer;
+      }
+    }
+  }
+}
+// Conteúdo socio resultado
+
+// Conteúdo contato resultado
+
+.sf-contact-business-content {
+  gap: 12px;
+  &.sf-business-overflow {
+    ::-webkit-scrollbar {
+      background: #e0e0e0;
+      height: 4px;
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #bebebe;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: #e0e0e0;
+    }
+    ul {
+      max-height: 392px;
+      overflow-y: auto;
+    }
+  }
+  .sf-contact-content-list {
+    width: 100%;
+    &.content-list-segments {
+      height: fit-content;
+      div {
+        background-color: #f5f5f5;
+        width: 100%;
+      }
+      &.actived {
+        div {
+          background-color: #1fbdd538;
+          border-color: #00b8d4 !important;
+          color: #0395ac;
+        }
+      }
+      &:hover {
+        div {
+          border-color: #00b8d4 !important;
+          color: #0395ac;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  &.sf-content-grid {
+    .sf-contact-content-list {
+      flex: initial;
+    }
+  }
+}
+
+.information-list-business {
+  .information-list-business-li {
+    span {
+      width: 100%;
+    }
+    &:nth-child(odd) {
+      background-color: #79797936;
+    }
+  }
+}
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  margin: 12px 12px 0;
+  border-radius: 4px;
+  max-height: 210px;
+  overflow-y: auto;
+  z-index: 99;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+@media (min-width: 731px) {
+  .sf-contact-business-content {
+    .sf-contact-content-list {
+      width: calc(50% - 12px);
+    }
+    &.sf-content-grid {
+      .sf-contact-content-list {
+        width: calc(50% - 12px);
+      }
+    }
+  }
+  .sf-card-socio-content {
+    .sf-card-socio {
+      width: calc(50% - 12px);
+    }
+  }
+}
+
+@media (min-width: 960px) {
+  .sf-contact-business-content {
+    .sf-contact-content-list {
+      width: calc((100% - 24px) / 3);
+    }
+    &.sf-content-grid {
+      .sf-contact-content-list {
+        width: calc((100% - 24px) / 3);
+      }
+    }
+  }
+  .sf-card-socio-content {
+    .sf-card-socio {
+      width: calc((100% - 24px) / 3);
+    }
+  }
+}
+@media (min-width: 1200px) {
+  .sf-contact-business-content {
+    .sf-contact-content-list {
+      width: calc((100% - 24px) / 3);
+    }
+    &.sf-content-grid {
+      .sf-contact-content-list {
+        width: calc(100% / 4);
+      }
+    }
+  }
+  .sf-card-socio-content {
+    .sf-card-socio {
+      width: calc((100% - 36px) / 4);
+    }
+  }
+}
+
+// Conteúdo contato resultado
+
+.sf-loading-animation {
+  z-index: 999999;
+  // display: none;
+  height: 100px;
+  width: 100px;
+}
+
+.sf-loading-input {
+  height: 100%;
+  width: 40px;
+}
+
+// Error Style
+
+.sf-error-svg {
+  font-size: 3rem;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+/*////////////////////v animation//////////////////*/
+.text1 {
+  fill: none;
+  stroke-linejoin: round;
+  stroke-dasharray: 1160;
+  stroke-dashoffset: 0;
+}
+.text1:nth-child(3n) {
+  fill: #272727;
+}
+
+.text1:nth-child(3n + 2) {
+  fill: #e7515a;
+}
+
+.text2 {
+  fill: #2196f3;
+}
+// Mesagem Box
+
+.mensagem-box {
+  position: fixed;
+  overflow: hidden;
+  z-index: 997;
+  right: 30px;
+  bottom: 30px;
+}
+
+.mensagem {
+  margin-bottom: 12px;
+  border-radius: 4px;
+  padding: 16px 32px;
+  font-size: 1rem;
+  color: #fff;
+  z-index: 998;
+}
+
+.mensagem:last-child {
+  margin-bottom: 0;
+}
+
+.mensagem.success {
+  background-color: $successColor;
+}
+
+.mensagem.error {
+  background-color: $dangerColor;
+}
+
+.mensagem.warning {
+  background-color: $warningColor;
+}
+
+// Mesagem Box
+
+// Error Style
+
+.sf-modal {
+  background-color: #000;
+  position: fixed;
+  z-index: -1;
+  display: none;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  left: 0;
+  top: 0;
+  &.actived {
+    background-color: gray;
+    display: block;
+    z-index: 9999;
+    opacity: 0.8;
+  }
+}

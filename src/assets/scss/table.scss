@@ -1,0 +1,44 @@
+table * {
+    position: relative;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: left;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    font-size: 1.6em;
+    position: relative;
+}
+
+table thead tr {
+    height: 60px;
+    background: #36304a;
+}
+
+table thead tr th {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #fff;
+    line-height: 1.2;
+    padding: 12px;
+    font-weight: unset;
+}
+
+tbody tr {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    color: #808080;
+    font-weight: unset;
+}
+
+tbody tr td {
+    background-color: gainsboro;
+    padding: 12px;
+}
+
+tbody tr td.error-message {
+    padding: 12px;
+}
