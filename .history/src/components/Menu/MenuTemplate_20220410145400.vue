@@ -35,25 +35,17 @@
         </div>
         <ul class="sf-menu-ul sf-menu-content open" ref="container-collapse">
           <li class="sf-menu-li sf-px-4">
-            <div class="sf-row">
-              <div class="sf-col-12 sf-form-group">
-                <span
-                  class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
-                >
-                  Cor do Container
-                  <hr class="sf-width-100 sf-ml-4" />
-                </span>
-              </div>
+            <div class="sf-col-12 sf-form-group">
+              <span
+                class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+              >
+                Cor do Container
+                <hr class="sf-width-100 sf-ml-4" />
+              </span>
             </div>
-            <div class="sf-row">
-              <InputContainerColor
-                :valorInput="inputContainerColor"
-                v-on:callback="getValorContainerCor"
-              />
-            </div>
-            <InputGrid
-              :valorInput="inputGrid"
-              v-on:callback="getValorGridShow"
+            <InputContainerColor
+              :valorInput="inputContainerColor"
+              v-on:callback="getValorContainerCor"
             />
           </li>
         </ul>
@@ -143,30 +135,20 @@
         </ul>
       </div>
     </nav>
-    <div class="sf-content-page sf-p-0">
-      <div
-        class="sf-background-resize sf-mx-auto resizable"
-        :style="containerCss"
-      >
-        <div class="resizer">
-          <i class="mdi mdi-menu-left sf-position-absolute sf-text-lg"></i>
-          <i class="mdi mdi-menu-right sf-position-absolute sf-text-lg"></i>
-        </div>
-        <HomeView
-          :valor="inputRange"
-          :inputGap="inputGap"
-          :valorHeight="valorHeight"
-          :quantidade="parseInt(inputQuantidade)"
-          :quantidadeLinha="parseInt(inputQuantidadeLinha)"
-          :inputBorderRadius="inputBorderRadius"
-          :checkValue="checkValue"
-          :inputColor="inputColor"
-          :inputBorder="inputBorder"
-          :inputBorderColor="inputBorderColor"
-          :inputBorderTipo="inputBorderTipo"
-          :inputGrid="inputGrid"
-        />
-      </div>
+    <div class="sf-content-page sf-background-resize" :style="containerCss">
+      <HomeView
+        :valor="inputRange"
+        :inputGap="inputGap"
+        :valorHeight="valorHeight"
+        :quantidade="parseInt(inputQuantidade)"
+        :quantidadeLinha="parseInt(inputQuantidadeLinha)"
+        :inputBorderRadius="inputBorderRadius"
+        :checkValue="checkValue"
+        :inputColor="inputColor"
+        :inputBorder="inputBorder"
+        :inputBorderColor="inputBorderColor"
+        :inputBorderTipo="inputBorderTipo"
+      />
     </div>
     <div class="ga-mascara-fundo" @click="mask"></div>
   </div>
@@ -185,26 +167,24 @@ import InputPosicaoBloco from "@/components/templates/InputPosicaoBloco.vue";
 import InputBorderCorBloco from "@/components/templates/InputBorderCorBloco.vue";
 import InputBorderTipoBloco from "@/components/templates/InputBorderTipoBloco.vue";
 import InputContainerColor from "@/components/templates/InputContainerColor.vue";
-import InputGrid from "@/components/templates/InputGrid.vue";
 import image from "@/assets/logo-soften.webp";
 
 export default {
   name: "MenuTemplate",
   data: function () {
     return {
-      inputQuantidade: (this.inputQuantidade = "1"),
-      inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
+      inputQuantidade: (this.inputQuantidade = "2"),
+      inputQuantidadeLinha: (this.inputQuantidadeLinha = "2"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "50"),
-      valorHeight: (this.valorHeight = "500"),
+      inputRange: (this.inputRange = "100"),
+      valorHeight: (this.valorHeight = "100"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#e57979"),
+      inputColor: (this.inputColor = "#34E589"),
       inputBorder: (this.inputBorder = "0"),
       inputBorderColor: (this.inputBorderColor = ""),
       inputBorderTipo: (this.inputBorderTipo = ""),
       inputContainerColor: (this.inputContainerColor = "#FCFCFC"),
-      inputGrid: (this.inputGrid = "hidden"),
       image: image,
 
       tabs: [
@@ -228,49 +208,8 @@ export default {
     InputBorderCorBloco,
     InputBorderTipoBloco,
     InputContainerColor,
-    InputGrid,
   },
   beforeMount() {
-    function attr() {
-      var p = document.querySelector(".sf-background-resize");
-      var resizer = document.querySelector(".resizer");
-      resizer.addEventListener("mousedown", initDrag, false);
-
-      var startX, startWidth;
-
-      function initDrag(e) {
-        startX = e.clientX;
-        startWidth = parseInt(
-          document.defaultView.getComputedStyle(p).width,
-          10
-        );
-        document.documentElement.addEventListener("mousemove", doDrag, false);
-        document.documentElement.addEventListener("mouseup", stopDrag, false);
-      }
-
-      function doDrag(e) {
-        console.log(startWidth - e.clientX + startX);
-        p.style.width = startWidth - e.clientX + startX + "px";
-      }
-
-      function stopDrag() {
-        document.documentElement.removeEventListener(
-          "mousemove",
-          doDrag,
-          false
-        );
-        document.documentElement.removeEventListener(
-          "mouseup",
-          stopDrag,
-          false
-        );
-      }
-    }
-
-    setTimeout(() => {
-      attr();
-    }, 1000);
-
     if (window.innerWidth >= 768) {
       if (localStorage.getItem("menu") === "fechado") {
         document.body.classList.add("menu-fechado");
@@ -363,9 +302,6 @@ export default {
     getValorContainerCor(valor) {
       this.inputContainerColor = valor;
     },
-    getValorGridShow(valor) {
-      this.inputGrid = valor;
-    },
     getValorPosicaoBloco(valor) {
       this.checkValue = valor;
     },
@@ -386,57 +322,19 @@ export default {
 </script>
 
 <style lang="scss">
-.sf-background-resize {
-  padding: 3.6rem 2rem;
-  width: 100%;
-}
-
 .sf-background-resize.resizable {
+  background: cyan;
   position: relative;
-  min-width: 20vw;
-  max-width: 100%;
 }
 
 .sf-background-resize .resizer {
-  box-shadow: 1px 2px 11px 0 rgba(0, 0, 0, 0.1);
-  width: 30px;
-  transform: translateY(-50%);
-  height: 30px;
-  border-radius: 50px;
+  width: 10px;
+  height: 10px;
+  background: blue;
   position: absolute;
-  background-color: #434e5d;
-  left: -15px;
-  top: 50%;
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  cursor: pointer;
-  i {
-    &:first-child {
-      left: 0px;
-    }
-    &:last-child {
-      right: 0px;
-    }
-  }
-  &::after {
-    content: "";
-    width: 4px;
-    height: 30px;
-    background: #434e5d;
-    position: absolute;
-    top: -90%;
-  }
-  &::before {
-    content: "";
-    width: 4px;
-    height: 30px;
-    background: #434e5d;
-    position: absolute;
-    top: 90%;
-  }
+  right: 0;
+  bottom: 100px;
+  cursor: se-resize;
 }
 
 @import "@/assets/scss/style.scss";

@@ -35,25 +35,17 @@
         </div>
         <ul class="sf-menu-ul sf-menu-content open" ref="container-collapse">
           <li class="sf-menu-li sf-px-4">
-            <div class="sf-row">
-              <div class="sf-col-12 sf-form-group">
-                <span
-                  class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
-                >
-                  Cor do Container
-                  <hr class="sf-width-100 sf-ml-4" />
-                </span>
-              </div>
+            <div class="sf-col-12 sf-form-group">
+              <span
+                class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+              >
+                Cor do Container
+                <hr class="sf-width-100 sf-ml-4" />
+              </span>
             </div>
-            <div class="sf-row">
-              <InputContainerColor
-                :valorInput="inputContainerColor"
-                v-on:callback="getValorContainerCor"
-              />
-            </div>
-            <InputGrid
-              :valorInput="inputGrid"
-              v-on:callback="getValorGridShow"
+            <InputContainerColor
+              :valorInput="inputContainerColor"
+              v-on:callback="getValorContainerCor"
             />
           </li>
         </ul>
@@ -144,14 +136,7 @@
       </div>
     </nav>
     <div class="sf-content-page sf-p-0">
-      <div
-        class="sf-background-resize sf-mx-auto resizable"
-        :style="containerCss"
-      >
-        <div class="resizer">
-          <i class="mdi mdi-menu-left sf-position-absolute sf-text-lg"></i>
-          <i class="mdi mdi-menu-right sf-position-absolute sf-text-lg"></i>
-        </div>
+      <div class="sf-background-resize sf-mx-auto" :style="containerCss">
         <HomeView
           :valor="inputRange"
           :inputGap="inputGap"
@@ -164,7 +149,6 @@
           :inputBorder="inputBorder"
           :inputBorderColor="inputBorderColor"
           :inputBorderTipo="inputBorderTipo"
-          :inputGrid="inputGrid"
         />
       </div>
     </div>
@@ -185,26 +169,24 @@ import InputPosicaoBloco from "@/components/templates/InputPosicaoBloco.vue";
 import InputBorderCorBloco from "@/components/templates/InputBorderCorBloco.vue";
 import InputBorderTipoBloco from "@/components/templates/InputBorderTipoBloco.vue";
 import InputContainerColor from "@/components/templates/InputContainerColor.vue";
-import InputGrid from "@/components/templates/InputGrid.vue";
 import image from "@/assets/logo-soften.webp";
 
 export default {
   name: "MenuTemplate",
   data: function () {
     return {
-      inputQuantidade: (this.inputQuantidade = "1"),
-      inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
+      inputQuantidade: (this.inputQuantidade = "2"),
+      inputQuantidadeLinha: (this.inputQuantidadeLinha = "2"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "50"),
-      valorHeight: (this.valorHeight = "500"),
+      inputRange: (this.inputRange = "100"),
+      valorHeight: (this.valorHeight = "100"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#e57979"),
+      inputColor: (this.inputColor = "#34E589"),
       inputBorder: (this.inputBorder = "0"),
       inputBorderColor: (this.inputBorderColor = ""),
       inputBorderTipo: (this.inputBorderTipo = ""),
       inputContainerColor: (this.inputContainerColor = "#FCFCFC"),
-      inputGrid: (this.inputGrid = "hidden"),
       image: image,
 
       tabs: [
@@ -228,12 +210,18 @@ export default {
     InputBorderCorBloco,
     InputBorderTipoBloco,
     InputContainerColor,
-    InputGrid,
   },
   beforeMount() {
     function attr() {
       var p = document.querySelector(".sf-background-resize");
-      var resizer = document.querySelector(".resizer");
+
+      p.className = p.className + " resizable";
+      var resizer = document.createElement("div");
+      var icon = document.createElement("i");
+      resizer.className = "resizer";
+      icon.className = "mdi mdi-arrow-split-vertical sf-text-lg";
+      resizer.appendChild(icon);
+      p.appendChild(resizer);
       resizer.addEventListener("mousedown", initDrag, false);
 
       var startX, startWidth;
@@ -248,9 +236,8 @@ export default {
         document.documentElement.addEventListener("mouseup", stopDrag, false);
       }
 
-      function doDrag(e) {
-        console.log(startWidth - e.clientX + startX);
-        p.style.width = startWidth - e.clientX + startX + "px";
+      function doDrag() {
+        p.style.width = startWidth - startX + "px";
       }
 
       function stopDrag() {
@@ -363,9 +350,6 @@ export default {
     getValorContainerCor(valor) {
       this.inputContainerColor = valor;
     },
-    getValorGridShow(valor) {
-      this.inputGrid = valor;
-    },
     getValorPosicaoBloco(valor) {
       this.checkValue = valor;
     },
@@ -404,39 +388,15 @@ export default {
   height: 30px;
   border-radius: 50px;
   position: absolute;
-  background-color: #434e5d;
+  background-color: #d9d9d9;
   left: -15px;
   top: 50%;
   z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #272727;
   cursor: pointer;
-  i {
-    &:first-child {
-      left: 0px;
-    }
-    &:last-child {
-      right: 0px;
-    }
-  }
-  &::after {
-    content: "";
-    width: 4px;
-    height: 30px;
-    background: #434e5d;
-    position: absolute;
-    top: -90%;
-  }
-  &::before {
-    content: "";
-    width: 4px;
-    height: 30px;
-    background: #434e5d;
-    position: absolute;
-    top: 90%;
-  }
 }
 
 @import "@/assets/scss/style.scss";

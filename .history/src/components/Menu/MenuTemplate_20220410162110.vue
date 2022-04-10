@@ -35,22 +35,18 @@
         </div>
         <ul class="sf-menu-ul sf-menu-content open" ref="container-collapse">
           <li class="sf-menu-li sf-px-4">
-            <div class="sf-row">
-              <div class="sf-col-12 sf-form-group">
-                <span
-                  class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
-                >
-                  Cor do Container
-                  <hr class="sf-width-100 sf-ml-4" />
-                </span>
-              </div>
+            <div class="sf-col-12 sf-form-group">
+              <span
+                class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+              >
+                Cor do Container
+                <hr class="sf-width-100 sf-ml-4" />
+              </span>
             </div>
-            <div class="sf-row">
-              <InputContainerColor
-                :valorInput="inputContainerColor"
-                v-on:callback="getValorContainerCor"
-              />
-            </div>
+            <InputContainerColor
+              :valorInput="inputContainerColor"
+              v-on:callback="getValorContainerCor"
+            />
             <InputGrid
               :valorInput="inputGrid"
               v-on:callback="getValorGridShow"
@@ -164,7 +160,6 @@
           :inputBorder="inputBorder"
           :inputBorderColor="inputBorderColor"
           :inputBorderTipo="inputBorderTipo"
-          :inputGrid="inputGrid"
         />
       </div>
     </div>
@@ -204,7 +199,7 @@ export default {
       inputBorderColor: (this.inputBorderColor = ""),
       inputBorderTipo: (this.inputBorderTipo = ""),
       inputContainerColor: (this.inputContainerColor = "#FCFCFC"),
-      inputGrid: (this.inputGrid = "hidden"),
+      inputGrid: (this.inputGrid = false),
       image: image,
 
       tabs: [
@@ -228,7 +223,7 @@ export default {
     InputBorderCorBloco,
     InputBorderTipoBloco,
     InputContainerColor,
-    InputGrid,
+    inputGrid,
   },
   beforeMount() {
     function attr() {

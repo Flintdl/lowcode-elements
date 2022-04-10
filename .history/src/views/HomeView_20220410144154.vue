@@ -90,7 +90,6 @@ export default {
     inputBorder: String,
     inputBorderColor: String,
     inputBorderTipo: String,
-    inputGrid: String,
   },
   computed: {
     cssProps() {
@@ -118,8 +117,9 @@ export default {
     },
     widthProps1() {
       return {
-        width: `10%`,
-        visibility: this.inputGrid,
+        width: `calc((${this.valor}% - ${this.inputGap}px * ${
+          this.quantidadeLinha - "1"
+        }) / ${this.quantidadeLinha})`,
       };
     },
     widthProps() {
@@ -136,20 +136,20 @@ export default {
     },
   },
   mounted() {
-    this.arroz = this.$refs.previewGrid?.clientHeight;
+    this.arroz = this.$refs.previewGrid?.offsetHeight;
     this.valorRecalculado = this.valor / this.quantidadeLinha;
   },
   created() {
     this.$watch("quantidade", () => {
-      this.arroz = this.$refs.previewGrid?.clientHeight;
+      this.arroz = this.$refs.previewGrid?.offsetHeight;
       this.valorRecalculado = this.valor / this.quantidadeLinha;
     });
     this.$watch("quantidadeLinha", () => {
-      this.arroz = this.$refs.previewGrid?.clientHeight;
+      this.arroz = this.$refs.previewGrid?.offsetHeight;
       this.valorRecalculado = this.valor / this.quantidadeLinha;
     });
     this.$watch("valor", () => {
-      this.arroz = this.$refs.previewGrid?.clientHeight;
+      this.arroz = this.$refs.previewGrid?.offsetHeight;
       this.valorRecalculado = this.valor / this.quantidadeLinha;
     });
   },

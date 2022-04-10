@@ -119,7 +119,7 @@ export default {
     widthProps1() {
       return {
         width: `10%`,
-        visibility: this.inputGrid,
+        display: this.inputGrid,
       };
     },
     widthProps() {

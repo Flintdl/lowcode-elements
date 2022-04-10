@@ -35,25 +35,17 @@
         </div>
         <ul class="sf-menu-ul sf-menu-content open" ref="container-collapse">
           <li class="sf-menu-li sf-px-4">
-            <div class="sf-row">
-              <div class="sf-col-12 sf-form-group">
-                <span
-                  class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
-                >
-                  Cor do Container
-                  <hr class="sf-width-100 sf-ml-4" />
-                </span>
-              </div>
+            <div class="sf-col-12 sf-form-group">
+              <span
+                class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+              >
+                Cor do Container
+                <hr class="sf-width-100 sf-ml-4" />
+              </span>
             </div>
-            <div class="sf-row">
-              <InputContainerColor
-                :valorInput="inputContainerColor"
-                v-on:callback="getValorContainerCor"
-              />
-            </div>
-            <InputGrid
-              :valorInput="inputGrid"
-              v-on:callback="getValorGridShow"
+            <InputContainerColor
+              :valorInput="inputContainerColor"
+              v-on:callback="getValorContainerCor"
             />
           </li>
         </ul>
@@ -149,8 +141,7 @@
         :style="containerCss"
       >
         <div class="resizer">
-          <i class="mdi mdi-menu-left sf-position-absolute sf-text-lg"></i>
-          <i class="mdi mdi-menu-right sf-position-absolute sf-text-lg"></i>
+          <i class="mdi mdi-arrow-split-vertical sf-text-lg"></i>
         </div>
         <HomeView
           :valor="inputRange"
@@ -164,7 +155,6 @@
           :inputBorder="inputBorder"
           :inputBorderColor="inputBorderColor"
           :inputBorderTipo="inputBorderTipo"
-          :inputGrid="inputGrid"
         />
       </div>
     </div>
@@ -185,26 +175,24 @@ import InputPosicaoBloco from "@/components/templates/InputPosicaoBloco.vue";
 import InputBorderCorBloco from "@/components/templates/InputBorderCorBloco.vue";
 import InputBorderTipoBloco from "@/components/templates/InputBorderTipoBloco.vue";
 import InputContainerColor from "@/components/templates/InputContainerColor.vue";
-import InputGrid from "@/components/templates/InputGrid.vue";
 import image from "@/assets/logo-soften.webp";
 
 export default {
   name: "MenuTemplate",
   data: function () {
     return {
-      inputQuantidade: (this.inputQuantidade = "1"),
-      inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
+      inputQuantidade: (this.inputQuantidade = "2"),
+      inputQuantidadeLinha: (this.inputQuantidadeLinha = "2"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "50"),
-      valorHeight: (this.valorHeight = "500"),
+      inputRange: (this.inputRange = "100"),
+      valorHeight: (this.valorHeight = "100"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#e57979"),
+      inputColor: (this.inputColor = "#34E589"),
       inputBorder: (this.inputBorder = "0"),
       inputBorderColor: (this.inputBorderColor = ""),
       inputBorderTipo: (this.inputBorderTipo = ""),
       inputContainerColor: (this.inputContainerColor = "#FCFCFC"),
-      inputGrid: (this.inputGrid = "hidden"),
       image: image,
 
       tabs: [
@@ -228,7 +216,6 @@ export default {
     InputBorderCorBloco,
     InputBorderTipoBloco,
     InputContainerColor,
-    InputGrid,
   },
   beforeMount() {
     function attr() {
@@ -363,9 +350,6 @@ export default {
     getValorContainerCor(valor) {
       this.inputContainerColor = valor;
     },
-    getValorGridShow(valor) {
-      this.inputGrid = valor;
-    },
     getValorPosicaoBloco(valor) {
       this.checkValue = valor;
     },
@@ -413,29 +397,13 @@ export default {
   justify-content: center;
   color: #ffffff;
   cursor: pointer;
-  i {
-    &:first-child {
-      left: 0px;
-    }
-    &:last-child {
-      right: 0px;
-    }
-  }
   &::after {
     content: "";
-    width: 4px;
+    width: 10px;
     height: 30px;
-    background: #434e5d;
+    background: rebeccapurple;
     position: absolute;
-    top: -90%;
-  }
-  &::before {
-    content: "";
-    width: 4px;
-    height: 30px;
-    background: #434e5d;
-    position: absolute;
-    top: 90%;
+    top: -30px;
   }
 }
 
