@@ -1503,6 +1503,13 @@ a:hover {
   cursor: pointer;
 }
 
+.sf-cursor-grab {
+  cursor: grab;
+}
+.sf-cursor-grabbing {
+  cursor: grabbing;
+}
+
 .sf-text-xxs {
   font-size: 0.625rem !important;
 }
@@ -3334,6 +3341,10 @@ a:hover {
 
 .sf-bg-primary {
   background-color: $primaryColor !important;
+}
+
+.sf-btn-primary-hover {
+  background-color: $btnPrimaryHover !important;
 }
 
 .sf-bg-secondary {

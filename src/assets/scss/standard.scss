@@ -85,32 +85,60 @@ input[type="checkbox"] {
   border-radius: 6px;
 }
 
-// Renderização de Consulta - Botão
+// Renderização de Templates - Botão
 
-.sf-action-rendered-content {
-  gap: 8px;
-  .sf-action-rendered-consult {
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    white-space: nowrap;
-    width: auto;
-    span {
-      cursor: pointer;
-      &:hover {
-        // background-color: #27272736 !important;
-        border-color: #272727 !important;
+.sf-btn-select-content {
+  background-color: $btnPrimary;
+  > div {
+    > div.sf-display-block {
+      i {
+        display: none;
       }
-      &.actived {
-        // background-color: #00b8d436 !important;
-        border-color: #00b8d4 !important;
-        font-weight: 700;
-      }
+    }
+  }
+  .sf-btn-primary-hover {
+    width: 100%;
+  }
+}
+
+// Renderização de Templates - Botão
+
+// Tooltip Actions
+
+.sf-tooltip-actions {
+  background-color: darken(#434e5d, 4);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  bottom: 10px;
+  right: 12px;
+  display: none;
+  i {
+    cursor: pointer;
+    &:hover {
+      color: $greyLight !important;
     }
   }
 }
 
-// Renderização de Consulta - Botão
+.sf-tooltip-actions-hover {
+  &:hover {
+    border: 2px solid salmon;
+    .sf-tooltip-actions {
+      display: block;
+    }
+  }
+}
+
+// Tooltip Actions
+
+// Dialog Template
+
+.sf-dialog-content {
+  width: clamp(150px, 50ch, 900px);
+  z-index: 998;
+}
+
+// Dialog Template
 
 // Conteúdo socio resultado
 

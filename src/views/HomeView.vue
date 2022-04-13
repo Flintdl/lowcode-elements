@@ -32,30 +32,29 @@
           >
             <DivGrid
               v-bind:key="n"
+              :ref="'bloco_' + n"
               v-for="n of quantidade"
               :tamanho="String(valor)"
               :altura="String(valorHeight)"
+              :idBloco="'container_' + n"
+              :background="inputColor"
               :cssDefinido="cssProps"
               class="sf-position-relative"
             />
           </div>
         </div>
+
+        <!-- <pre class="language-markup">
+        <code id="preview-code" class="language-markup">
+         <div>aaaa</div>
+        </code>
+      </pre> -->
       </div>
-      <div class="sf-col-12 sf-mt-3 sf-display-flex sf-justify-content-end">
+      <!-- <div class="sf-col-12 sf-mt-3 sf-display-flex sf-justify-content-end">
         <button class="sf-btn sf-btn-primary" @click="gerarCodigo">
           Gerar Codigo
         </button>
-      </div>
-    </div>
-    <div class="sf-row" v-if="htmlPreviewCode">
-      <div class="sf-col-12 sf-mx-auto sf-mt-5 sf-code-content">
-        <div class="sf-bg-code sf-p-4 sf-border-radius">
-          <code>
-            <span class="sf-text-info">Código do Preview</span> <br />
-            {{ htmlPreviewCode }}
-          </code>
-        </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -64,6 +63,8 @@
 // @ is an alias to /src
 
 import DivGrid from "@/components/templates/DivGrid.vue";
+import Prism from "prismjs";
+import "prismjs/themes/prism-okaidia.min.css";
 
 export default {
   name: "HomeView",
@@ -100,7 +101,6 @@ export default {
         // }) / ${this.quantidadeLinha})`,
         height: this.valorHeight + "px",
         "border-radius": this.inputBorderRadius + "px",
-        "background-color": this.inputColor,
         border:
           this.inputBorder +
           "px" +
@@ -136,6 +136,9 @@ export default {
     },
   },
   mounted() {
+    window.Prism = window.Prism || {};
+    window.Prism.manual = true;
+    Prism.highlightAll();
     this.arroz = this.$refs.previewGrid?.clientHeight;
     this.valorRecalculado = this.valor / this.quantidadeLinha;
   },
@@ -155,7 +158,8 @@ export default {
   },
   methods: {
     gerarCodigo() {
-      this.htmlPreviewCode =
+      this.htmlPreviewCode = true;
+      document.getElementById("preview-code").innerHTML =
         document.getElementById("sf-preview-code").innerHTML;
     },
   },

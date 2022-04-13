@@ -7,7 +7,7 @@
       <i class="mdi mdi-menu sf-text-xlg sf-text-muted sf-dropdown-action"></i>
     </div>
     <nav class="sf-menu">
-      <div class="sf-menu-header">
+      <!-- <div class="sf-menu-header">
         <div
           @click="menu"
           class="hamburger-link sf-display-none sf-display-md-block"
@@ -16,23 +16,29 @@
             class="mdi mdi-menu sf-text-xlg sf-text-muted sf-dropdown-action"
           ></i>
         </div>
-      </div>
-      <div class="sf-menu-body">
-        <div class="sf-row sf-px-4" style="visibility: visible">
-          <div
-            v-for="tab of tabs"
-            v-bind:key="tab.label"
-            class="sf-col-3 sf-text-center sf-form-group"
-          >
+      </div> -->
+      <div class="sf-menu-body sf-py-0">
+        <div class="sf-btn-select-content" style="visibility: visible">
+          <div class="sf-display-flex sf-flex-wrap">
             <div
-              @click="showContent"
-              :dataRef="tab.ref"
-              class="sf-btn-primary sf-cursor-pointer sf-p-2 sf-text-white sf-font-weight-bold sf-border-radius"
+              v-for="tab of tabs"
+              v-bind:key="tab.label"
+              class="sf-text-center"
             >
-              {{ tab.label }}
+              <div
+                @click="showContent"
+                :dataRef="tab.ref"
+                class="sf-btn-select sf-cursor-pointer sf-py-2 sf-px-4 sf-text-white sf-font-weight-bold"
+                :class="
+                  tab.container ? 'sf-btn-primary-hover' : 'sf-btn-primary'
+                "
+              >
+                {{ tab.label }}
+              </div>
             </div>
           </div>
         </div>
+        <!-- TEMPLATE DO CONTAINER -->
         <ul class="sf-menu-ul sf-menu-content open" ref="container-collapse">
           <li class="sf-menu-li sf-px-4">
             <div class="sf-row">
@@ -57,6 +63,7 @@
             />
           </li>
         </ul>
+        <!-- TEMPLATE DOS BLOCOS -->
         <ul class="sf-menu-ul sf-menu-content" ref="template-collapse">
           <li class="sf-menu-li sf-px-4">
             <div class="sf-row">
@@ -103,6 +110,7 @@
             </div>
           </li>
         </ul>
+        <!-- BORDA DOS BLOCOS -->
         <ul class="sf-menu-ul sf-menu-content" ref="border-collapse">
           <li class="sf-menu-li sf-px-4">
             <div class="sf-row">
@@ -133,6 +141,7 @@
             </div>
           </li>
         </ul>
+        <!-- POSIÇÃO DOS BLOCOS -->
         <ul class="sf-menu-ul sf-menu-content" ref="position-collapse">
           <li class="sf-menu-li sf-px-4">
             <InputPosicaoBloco
@@ -145,10 +154,15 @@
     </nav>
     <div class="sf-content-page sf-p-0">
       <div
+        ref="sfBackgroundResize"
         class="sf-background-resize sf-mx-auto resizable"
         :style="containerCss"
       >
-        <div class="resizer">
+        <span class="sf-text-center sf-display-block sf-color-info">
+          Width: {{ divResizeWidth }} Pixels
+        </span>
+
+        <div class="resizer" @mousedown="resizeDiv">
           <i class="mdi mdi-menu-left sf-position-absolute sf-text-lg"></i>
           <i class="mdi mdi-menu-right sf-position-absolute sf-text-lg"></i>
         </div>
@@ -171,7 +185,6 @@
     <div class="ga-mascara-fundo" @click="mask"></div>
   </div>
 </template>
-
 <script>
 import HomeView from "@/views/HomeView.vue";
 import InputGapTemplate from "@/components/templates/InputGapTemplate.vue";
@@ -192,23 +205,24 @@ export default {
   name: "MenuTemplate",
   data: function () {
     return {
-      inputQuantidade: (this.inputQuantidade = "1"),
-      inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
+      inputQuantidade: (this.inputQuantidade = "4"),
+      inputQuantidadeLinha: (this.inputQuantidadeLinha = "2"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "50"),
-      valorHeight: (this.valorHeight = "500"),
+      inputRange: (this.inputRange = "100"),
+      valorHeight: (this.valorHeight = "125"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#e57979"),
+      inputColor: (this.inputColor = "#434e5d"),
       inputBorder: (this.inputBorder = "0"),
       inputBorderColor: (this.inputBorderColor = ""),
-      inputBorderTipo: (this.inputBorderTipo = ""),
-      inputContainerColor: (this.inputContainerColor = "#FCFCFC"),
+      inputBorderTipo: (this.inputBorderTipo = "empty"),
+      inputContainerColor: (this.inputContainerColor = "#E6E6E6"),
       inputGrid: (this.inputGrid = "hidden"),
       image: image,
+      divResizeWidth: 0,
 
       tabs: [
-        { label: "Container", ref: "container-collapse" },
+        { label: "Container", ref: "container-collapse", container: "initial" },
         { label: "Template", ref: "template-collapse" },
         { label: "Bordas", ref: "border-collapse" },
         { label: "Posições", ref: "position-collapse" },
@@ -230,47 +244,8 @@ export default {
     InputContainerColor,
     InputGrid,
   },
+
   beforeMount() {
-    function attr() {
-      var p = document.querySelector(".sf-background-resize");
-      var resizer = document.querySelector(".resizer");
-      resizer.addEventListener("mousedown", initDrag, false);
-
-      var startX, startWidth;
-
-      function initDrag(e) {
-        startX = e.clientX;
-        startWidth = parseInt(
-          document.defaultView.getComputedStyle(p).width,
-          10
-        );
-        document.documentElement.addEventListener("mousemove", doDrag, false);
-        document.documentElement.addEventListener("mouseup", stopDrag, false);
-      }
-
-      function doDrag(e) {
-        console.log(startWidth - e.clientX + startX);
-        p.style.width = startWidth - e.clientX + startX + "px";
-      }
-
-      function stopDrag() {
-        document.documentElement.removeEventListener(
-          "mousemove",
-          doDrag,
-          false
-        );
-        document.documentElement.removeEventListener(
-          "mouseup",
-          stopDrag,
-          false
-        );
-      }
-    }
-
-    setTimeout(() => {
-      attr();
-    }, 1000);
-
     if (window.innerWidth >= 768) {
       if (localStorage.getItem("menu") === "fechado") {
         document.body.classList.add("menu-fechado");
@@ -300,20 +275,57 @@ export default {
     },
   },
   methods: {
+    resizeDiv(e) {
+      var divResize = this.$refs.sfBackgroundResize;
+      var startX, startWidth;
+
+      startX = e.clientX;
+      startWidth = parseInt(
+        document.defaultView.getComputedStyle(divResize).width,
+        10
+      );
+
+      document.documentElement.addEventListener("mousemove", doDrag);
+      document.documentElement.addEventListener("mouseup", stopDrag);
+
+      function doDrag(e) {
+        divResize.style.width = startWidth - e.clientX + startX + "px";
+        this.divResizeWidth = startWidth - e.clientX + startX;
+      }
+
+      function stopDrag() {
+        document.documentElement.removeEventListener("mousemove", doDrag);
+        document.documentElement.removeEventListener("mouseup", stopDrag);
+      }
+    },
     showContent(e) {
       var referenciaItem = this.$refs[e.currentTarget.getAttribute("dataRef")];
+      var referenciaAllButtons = document.querySelectorAll(".sf-btn-select");
+      var referenciaItemCss = e.currentTarget;
       for (let i = 0; i < this.tabs.length; i++) {
         const element = this.tabs[i];
-        if (this.$refs[element.ref]) {
+        if (this.$refs[element.ref] !== referenciaItem) {
           if (this.$refs[element.ref].classList.contains("open"))
             this.$refs[element.ref].classList.remove("open");
+        }
+      }
+
+      for (let i = 0; i < referenciaAllButtons.length; i++) {
+        const element = referenciaAllButtons[i];
+        if (element.hasAttribute("dataRef")) {
+          element.classList.remove("sf-btn-primary-hover");
+          element.classList.add("sf-btn-primary");
         }
       }
       if (referenciaItem) {
         referenciaItem.classList.toggle("open");
         if (!referenciaItem.classList.contains("open")) {
+          referenciaItemCss.classList.remove("sf-btn-primary-hover");
+          referenciaItemCss.classList.add("sf-btn-primary");
           referenciaItem.classList.remove("open");
         } else {
+          referenciaItemCss.classList.remove("sf-btn-primary");
+          referenciaItemCss.classList.add("sf-btn-primary-hover");
           referenciaItem.classList.add("open");
         }
       }
@@ -371,18 +383,6 @@ export default {
     },
   },
 };
-
-// function dropdown(menu) {
-//   var dropdowns = document.getElementsByClassName("sf-dropdown-menu");
-//   var i;
-//   for (i = 0; i < dropdowns.length; i++) {
-//     var openDropdown = dropdowns[i];
-//     if (openDropdown.classList.contains("show")) {
-//       openDropdown.classList.remove("show");
-//     }
-//   }
-//   document.querySelector(menu).classList.toggle("show");
-// }
 </script>
 
 <style lang="scss">
@@ -423,19 +423,27 @@ export default {
   }
   &::after {
     content: "";
-    width: 4px;
+    width: 3px;
     height: 30px;
     background: #434e5d;
     position: absolute;
-    top: -90%;
+    transition: height 0.07s linear;
+    bottom: 30px;
   }
   &::before {
     content: "";
-    width: 4px;
+    width: 3px;
     height: 30px;
     background: #434e5d;
     position: absolute;
-    top: 90%;
+    transition: height 0.07s linear;
+    top: 30px;
+  }
+  &:hover {
+    &::after,
+    &::before {
+      height: calc(50vh - 15px);
+    }
   }
 }
 

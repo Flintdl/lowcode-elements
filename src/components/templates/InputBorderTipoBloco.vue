@@ -11,7 +11,7 @@
       <option
         v-bind:key="item.value"
         :value="item.value"
-        :disabled="!item.value"
+        :disabled="item.disable"
         v-for="item of items"
       >
         {{ item.label }}
@@ -28,6 +28,7 @@ export default {
   data: () => {
     return {
       items: [
+        { label: "Nenhum Valor", value: "empty", disable: true },
         { label: "Solid", value: "solid" },
         { label: "Dashed", value: "dashed" },
       ],

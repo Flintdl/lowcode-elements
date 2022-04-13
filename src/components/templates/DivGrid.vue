@@ -1,10 +1,47 @@
 <template>
   <div
-    class="sf-position-relative sf-overflow-hidden"
-    :style="cssDefinido"
-    ref="container"
+    class="sf-position-relative sf-tooltip-actions-hover"
+    :style="[cssDefinido, styleComputed]"
+    :ref="idBloco"
   >
-    <div
+    <component
+      v-on:callback="closeDialog"
+      :cardId="idBloco"
+      v-bind:is="component"
+      :idBloco="'component_' + idBloco"
+    />
+    <div class="sf-tooltip-actions sf-position-absolute">
+      <ul class="sf-row">
+        <li class="sf-col-4 sf-text-center">
+          <label :for="idBloco" class="sf-cursor-pointer">
+            <i
+              class="mdi mdi-image sf-text-lg sf-text-white sf-dropdown-action"
+            ></i>
+            <input
+              :id="idBloco"
+              :ref="'input' + idBloco"
+              type="file"
+              class="sf-display-none"
+              @change="showOptions($event, 'imagem')"
+            />
+          </label>
+        </li>
+        <li class="sf-col-4 sf-text-center">
+          <i
+            @click="showOptions($event, 'text')"
+            class="mdi mdi-card-text sf-text-lg sf-text-white sf-dropdown-action"
+          ></i>
+        </li>
+        <li class="sf-col-4 sf-text-center">
+          <i
+            @click="showOptions($event, 'options')"
+            class="mdi mdi-cog sf-text-lg sf-text-white sf-dropdown-action"
+          ></i>
+        </li>
+      </ul>
+    </div>
+
+    <!-- <div
       class="sf-height-position sf-position-absolute sf-display-flex sf-flex-column sf-px-2"
     >
       <i
@@ -17,8 +54,8 @@
       <i
         class="mdi mdi-arrow-down sf-text-md sf-text-white sf-dropdown-action"
       ></i>
-    </div>
-    <div
+    </div> -->
+    <!-- <div
       class="sf-width-position sf-width-100 sf-position-absolute sf-display-flex sf-align-items-center sf-px-2"
     >
       <i
@@ -32,30 +69,80 @@
       <i
         class="mdi mdi-arrow-right sf-text-md sf-text-white sf-dropdown-action"
       ></i>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import DialogBlocoConfiguracao from "@/components/templates/Dialog/DialogBlocoConfiguracao.vue";
+
 export default {
   data() {
     return {
-      larguraPixel: null,
+      backgroundImage: null,
+      component: null,
     };
   },
-  mounted() {
-    this.larguraPixel = this.$refs.container?.offsetWidth;
-  },
-
   props: {
     cssDefinido: Object,
     tamanho: String,
+    idBloco: String,
     altura: String,
+    background: String,
   },
-  created() {
-    this.$watch("tamanho", () => {
-      this.larguraPixel = this.$refs.container?.offsetWidth;
-    });
+  components: {
+    DialogBlocoConfiguracao,
+  },
+  methods: {
+    closeDialog: function (closeDialog) {
+      this.component = closeDialog;
+    },
+    showOptions: function (e, params) {
+      switch (params) {
+        case "imagem":
+          var filesSelected = e.currentTarget.files;
+          var backgroundDiv =
+            e.currentTarget.parentElement.parentElement.parentElement
+              .parentElement.parentElement;
+          if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+            var fileReader = new FileReader();
+            var srcData;
+            fileReader.onload = function (fileLoadedEvent) {
+              srcData = fileLoadedEvent.target.result; // <--- data: base64
+              var img = document.createElement("img");
+              img.src = srcData;
+              img.setAttribute("alt", "Imagem Teste");
+              img.style.width = "50%";
+              img.style.maxHeight = "90%";
+              backgroundDiv.appendChild(img);
+            };
+          }
+          fileReader.readAsDataURL(fileToLoad);
+          break;
+        case "text":
+          var divMaster =
+            e.currentTarget.parentElement.parentElement.parentElement
+              .parentElement;
+          var texto = document.createElement("p");
+          texto.className = "sf-text-white";
+          texto.setAttribute("contenteditable", "true");
+          texto.style.width = "fit-content";
+          texto.innerText = "Digite o Texto que Deseja";
+          divMaster.appendChild(texto);
+          break;
+        case "options":
+          this.component = "DialogBlocoConfiguracao";
+          break;
+      }
+    },
+  },
+  computed: {
+    styleComputed() {
+      return {
+        "background-color": this.background,
+      };
+    },
   },
 };
 </script>
