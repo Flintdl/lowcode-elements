@@ -134,8 +134,14 @@ input[type="checkbox"] {
 // Dialog Template
 
 .sf-dialog-content {
+  box-shadow: 1px 2px 11px 0 rgba(0, 0, 0, 0.1);
   width: clamp(150px, 50ch, 900px);
+  height: fit-content;
   z-index: 998;
+  &.sf-minimized-dialog {
+    overflow: hidden;
+    height: 47px;
+  }
 }
 
 // Dialog Template

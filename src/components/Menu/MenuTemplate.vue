@@ -205,10 +205,10 @@ export default {
   name: "MenuTemplate",
   data: function () {
     return {
-      inputQuantidade: (this.inputQuantidade = "4"),
-      inputQuantidadeLinha: (this.inputQuantidadeLinha = "2"),
+      inputQuantidade: (this.inputQuantidade = "1"),
+      inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "100"),
+      inputRange: (this.inputRange = "50"),
       valorHeight: (this.valorHeight = "125"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
@@ -290,7 +290,7 @@ export default {
 
       function doDrag(e) {
         divResize.style.width = startWidth - e.clientX + startX + "px";
-        this.divResizeWidth = startWidth - e.clientX + startX;
+        this.divResizeWidth = divResize.offsetWidth;
       }
 
       function stopDrag() {
@@ -407,7 +407,7 @@ export default {
   background-color: #434e5d;
   left: -15px;
   top: 50%;
-  z-index: 999;
+  z-index: 500;
   display: flex;
   align-items: center;
   justify-content: center;

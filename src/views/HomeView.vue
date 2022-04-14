@@ -33,6 +33,7 @@
             <DivGrid
               v-bind:key="n"
               :ref="'bloco_' + n"
+              :idReferencia="n"
               v-for="n of quantidade"
               :tamanho="String(valor)"
               :altura="String(valorHeight)"

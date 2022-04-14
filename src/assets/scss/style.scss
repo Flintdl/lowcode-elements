@@ -1503,6 +1503,10 @@ a:hover {
   cursor: pointer;
 }
 
+.sf-cursor-default {
+  cursor: default;
+}
+
 .sf-cursor-grab {
   cursor: grab;
 }
@@ -3199,6 +3203,10 @@ a:hover {
   border: 2px solid $greyLight !important;
 }
 
+.sf-border-dashed {
+  border-style: dashed !important;
+}
+
 .sf-border-top {
   border-top: 1px solid $greyLight !important;
 }
@@ -3248,7 +3256,7 @@ a:hover {
 }
 
 .sf-border-primary {
-  border-color: $primaryColor !important;
+  border-color: $thirdColor !important;
 }
 
 .sf-border-secondary {
@@ -3349,6 +3357,10 @@ a:hover {
 
 .sf-bg-secondary {
   background-color: $secondaryColor !important;
+}
+
+.sf-bg-third {
+  background-color: $thirdColor !important;
 }
 
 .sf-bg-success {

@@ -5,10 +5,13 @@
     :ref="idBloco"
   >
     <component
-      v-on:callback="closeDialog"
       :cardId="idBloco"
       v-bind:is="component"
       :idBloco="'component_' + idBloco"
+      v-on:callback="closeDialog"
+      v-on:callbackMinimized="minimizedDialog"
+      v-on:callbackAc="getValorCampoAc"
+      :class="componentMinimized"
     />
     <div class="sf-tooltip-actions sf-position-absolute">
       <ul class="sf-row">
@@ -81,6 +84,11 @@ export default {
     return {
       backgroundImage: null,
       component: null,
+      componentMinimized: null,
+      shadowLateral: this.shadowLateral,
+      shadowBottom: this.shadowBottom,
+      shadowExpanse: this.shadowExpanse,
+      shadowCor: this.shadowCor,
     };
   },
   props: {
@@ -94,9 +102,6 @@ export default {
     DialogBlocoConfiguracao,
   },
   methods: {
-    closeDialog: function (closeDialog) {
-      this.component = closeDialog;
-    },
     showOptions: function (e, params) {
       switch (params) {
         case "imagem":
@@ -136,11 +141,29 @@ export default {
           break;
       }
     },
+    closeDialog: function (closeDialog) {
+      this.component = closeDialog;
+    },
+    minimizedDialog: function (minimizedDialog) {
+      console.log("Chamou?");
+      this.componentMinimized = minimizedDialog;
+    },
+    getValorCampoAc(valor) {
+      this.shadowLateral = valor.shadowLateral;
+      this.shadowBottom = valor.shadowBottom;
+      this.shadowExpanse = valor.shadowExpanse;
+      this.shadowCor = valor.shadowCor;
+    },
   },
   computed: {
     styleComputed() {
       return {
         "background-color": this.background,
+        "box-shadow": `
+          ${this.shadowLateral ? this.shadowLateral : "1"}px 
+          ${this.shadowBottom ? this.shadowBottom : "2"}px 
+          ${this.shadowExpanse ? this.shadowExpanse : "11"}px 0
+          ${this.shadowCor ? this.shadowCor : "rgba(0, 0, 0, .1)"} `,
       };
     },
   },
