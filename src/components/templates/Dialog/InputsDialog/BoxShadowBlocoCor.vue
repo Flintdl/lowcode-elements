@@ -1,10 +1,51 @@
 <template>
   <div class="sf-col sf-form-group">
     <label class="sf-label">Cor do Shadow</label>
+    <ul class="sf-colors-list sf-display-flex sf-mb-2">
+      <li
+        v-for="(color, i) of colorsList"
+        v-bind:key="i"
+        class="sf-colors-itens sf-cursor-pointer sf-mr-2"
+      >
+        <span
+          :style="'background-color:' + color.hexadecimal"
+          :data-color="color.hexadecimal"
+          :title="'Hexadecimal: ' + color.hexadecimal"
+          @click="setValueColor"
+          :ref="color.id"
+          class="sf-colors-itens-input sf-display-block sf-p-3 sf-position-relative"
+        >
+          <label
+            class="sf-remove-color sf-position-absolute"
+            @click="removeColorArray"
+          >
+            <i class="mdi mdi-close sf-text-sm sf-text-standard"></i>
+          </label>
+          <label
+            class="sf-edit-color sf-position-absolute"
+            @click="editColorArray"
+          >
+            <i class="mdi mdi-pencil sf-text-sm sf-text-standard"></i>
+          </label>
+        </span>
+      </li>
+      <li
+        v-if="verifyButton"
+        @click="insertColorArray"
+        class="sf-colors-itens sf-colors-itens-new sf-cursor-pointer"
+      >
+        <span
+          class="sf-colors-itens-input sf-display-block sf-px-2 sf-py-1 sf-position-relative"
+        >
+          <i class="mdi mdi-plus sf-text-lg sf-text-standard"></i>
+        </span>
+      </li>
+    </ul>
     <input
       type="color"
       id="inputShadowColor"
       v-model="valor"
+      ref="novaCor"
       class="sf-p-1 sf-text-capitalize"
     />
   </div>
@@ -14,6 +55,12 @@
 export default {
   props: {
     valorInput: String,
+  },
+  data: function () {
+    return {
+      verifyButton: true,
+      colorsList: [],
+    };
   },
   computed: {
     valor: {
@@ -25,7 +72,109 @@ export default {
       },
     },
   },
+  beforeMount() {
+    if (localStorage.getItem("coresPreset")) {
+      this.colorsList = JSON.parse(localStorage.getItem("coresPreset"));
+    }
+  },
+  methods: {
+    insertColorArray() {
+      if (this.colorsList.length < 5) {
+        if (this.colorsList.length <= 0) {
+          var date = new Date().getTime();
+          var novaCor = { id: date, hexadecimal: this.$refs.novaCor.value };
+          this.colorsList.push(novaCor);
+        } else {
+          var objIndex = this.colorsList.find(
+            (obj) => obj.hexadecimal === this.$refs.novaCor.value
+          );
+          if (!objIndex) {
+            date = new Date().getTime();
+            novaCor = { id: date, hexadecimal: this.$refs.novaCor.value };
+            this.colorsList.push(novaCor);
+          } else {
+            console.log(
+              "Essa cor já existe como preset: ",
+              objIndex.hexadecimal
+            );
+          }
+        }
+        localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
+      } else {
+        console.log("Máximo de cor: ", this.colorsList.length);
+      }
+    },
+    editColorArray(e) {
+      var objIndex = this.colorsList.find(
+        (obj) =>
+          obj.hexadecimal ==
+          e.currentTarget.parentElement.getAttribute("data-color")
+      );
+      console.log(objIndex);
+      objIndex.hexadecimal = this.$refs.novaCor.value;
+      localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
+    },
+    removeColorArray(e) {
+      this.colorsList = this.colorsList.filter(function (returnableObjects) {
+        return (
+          returnableObjects.hexadecimal !==
+          e.currentTarget.parentElement.getAttribute("data-color")
+        );
+      });
+      localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
+    },
+    setValueColor(e) {
+      this.$emit("callback", e.currentTarget.getAttribute("data-color"));
+    },
+  },
+  created() {
+    this.$watch("colorsList", () => {
+      if (this.colorsList.length >= 5) {
+        this.verifyButton = false;
+      } else {
+        this.verifyButton = true;
+      }
+    });
+  },
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.sf-remove-color,
+.sf-edit-color {
+  background-color: #fdfdfd;
+  border: 2px solid #e7e7e7;
+  border-radius: 50px;
+  right: -8px;
+  top: -6px;
+  padding: 0.1rem;
+  height: 22px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.sf-edit-color {
+  right: inherit;
+  left: -8px;
+}
+.sf-colors-list {
+  .sf-colors-itens {
+    .sf-colors-itens-input {
+      border-radius: 50px;
+      border: 2px solid #ffffff;
+      box-shadow: 1px 2px 11px 0 rgba(0, 0, 0, 0.1);
+      &:hover {
+        .sf-remove-color,
+        .sf-edit-color {
+          display: flex;
+        }
+      }
+    }
+    &.sf-colors-itens-new {
+      span {
+        padding: 0.063rem 0.375rem !important;
+      }
+    }
+  }
+}
+</style>

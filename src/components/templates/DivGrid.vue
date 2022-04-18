@@ -4,12 +4,23 @@
     :style="[cssDefinido, styleComputed]"
     :ref="idBloco"
   >
+    <div v-if="textObject.length">
+      <p
+        class="sf-text-white sf-text-center"
+        v-for="(texto, i) of textObject"
+        v-bind:key="i"
+      >
+        {{ texto.texto }}
+      </p>
+    </div>
+    <!-- v-on:callbackTextoInsereBloco="insereTexto" -->
     <component
       :cardId="idBloco"
       v-bind:is="component"
       :idBloco="'component_' + idBloco"
       v-on:callback="closeDialog"
       v-on:callbackMinimized="minimizedDialog"
+      v-on:callbackTextoInsereBloco="insereTexto"
       v-on:callbackAc="getValorCampoAc"
       :class="componentMinimized"
     />
@@ -89,6 +100,7 @@ export default {
       shadowBottom: this.shadowBottom,
       shadowExpanse: this.shadowExpanse,
       shadowCor: this.shadowCor,
+      textObject: [],
     };
   },
   props: {
@@ -125,17 +137,6 @@ export default {
           }
           fileReader.readAsDataURL(fileToLoad);
           break;
-        case "text":
-          var divMaster =
-            e.currentTarget.parentElement.parentElement.parentElement
-              .parentElement;
-          var texto = document.createElement("p");
-          texto.className = "sf-text-white";
-          texto.setAttribute("contenteditable", "true");
-          texto.style.width = "fit-content";
-          texto.innerText = "Digite o Texto que Deseja";
-          divMaster.appendChild(texto);
-          break;
         case "options":
           this.component = "DialogBlocoConfiguracao";
           break;
@@ -145,8 +146,12 @@ export default {
       this.component = closeDialog;
     },
     minimizedDialog: function (minimizedDialog) {
-      console.log("Chamou?");
       this.componentMinimized = minimizedDialog;
+    },
+    insereTexto: function (insereTexto) {
+      console.log(insereTexto);
+      var novoTexto = { texto: insereTexto };
+      this.textObject.push(novoTexto);
     },
     getValorCampoAc(valor) {
       this.shadowLateral = valor.shadowLateral;

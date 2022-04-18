@@ -85,15 +85,8 @@
         <TextTemplateCreate
           :valorInput="textObject.texto"
           v-on:callback="getTextCreated"
+          v-on:callbackTextoInsere="insereTextCreated"
         />
-      </div>
-      <div class="sf-dialog-footer sf-py-3 sf-px-4 sf-border-top">
-        <button
-          @click="resetShadow"
-          class="sf-btn sf-text-sm sf-px-3 sf-py-0 sf-btn-primary"
-        >
-          Resetar Texto
-        </button>
       </div>
     </div>
     <div
@@ -157,7 +150,7 @@ export default {
         shadowLateral: (this.shadowLateral = "0"),
         shadowBottom: (this.shadowBottom = "0"),
         shadowExpanse: (this.shadowExpanse = "0"),
-        shadowCor: (this.shadowCor = "transparent"),
+        shadowCor: (this.shadowCor = "#000000"),
       },
       textObject: [],
     };
@@ -196,19 +189,26 @@ export default {
         divResize.style.left = startLeft + e.clientX - startX + "px";
         divResize.style.top = startTop + e.clientY - startY + "px";
         if (
-          divResize.computedStyleMap().get("top").value >=
-          document.body.offsetTop + document.body.offsetHeight - 50
+          divResize.computedStyleMap().get("left").value <=
+          document.body.offsetLeft - 50
         ) {
-          var previewDrop = document.createElement("div");
-          previewDrop.style.height = "50px";
-          previewDrop.classList.add("preview-Drop");
-          previewDrop.style.borderRadius = "100% 100% 0 0";
-          previewDrop.style.width = "100%";
-          previewDrop.style.bottom = "0";
-          previewDrop.style.backgroundColor = "#fa807280";
-          previewDrop.style.position = "fixed";
-          previewDrop.style.zIndex = "500";
-          document.body.appendChild(previewDrop);
+          if (!document.querySelector(".preview-Drop")) {
+            var previewDrop = document.createElement("div");
+            previewDrop.style.height = "100vh";
+            previewDrop.style.left = "-50px";
+            previewDrop.classList.add("preview-Drop");
+            previewDrop.style.borderRadius = "0px";
+            previewDrop.style.transition = "left .07s linear";
+            previewDrop.style.width = "50px";
+            previewDrop.style.bottom = "0";
+            previewDrop.style.backgroundColor = "#e9206399";
+            previewDrop.style.position = "fixed";
+            previewDrop.style.zIndex = "500";
+            setTimeout(() => {
+              previewDrop.style.left = "0px";
+            }, 7);
+            document.body.appendChild(previewDrop);
+          }
         } else {
           if (document.querySelector(".preview-Drop")) {
             document
@@ -223,23 +223,19 @@ export default {
         document.documentElement.removeEventListener("mouseup", stopDrag);
         target.classList.remove("sf-cursor-grabbing");
         target.classList.add("sf-cursor-grab");
-        console.log(divResize.computedStyleMap().get("top").value);
-        console.log(document.body.offsetTop + document.body.offsetHeight - 50);
-        console.log(
-          divResize.computedStyleMap().get("top").value >=
-            document.body.offsetTop + document.body.offsetHeight - 50
-        );
         if (
-          divResize.computedStyleMap().get("top").value >=
-          document.body.offsetTop + document.body.offsetHeight - 50
+          divResize.computedStyleMap().get("left").value <=
+          document.body.offsetLeft - 50
         ) {
           divResize.style.top = "initial";
           divResize.style.bottom = "0";
           divResize.style.left = "0";
-          divResize.style.width = "100%";
+          divResize.style.width = "clamp(150px, 500px, 900px)";
+          divResize.style.height = "100%";
         } else {
           divResize.style.width = "clamp(150px, 50ch, 900px)";
           divResize.style.bottom = "initial";
+          divResize.style.height = "fit-content";
           return;
         }
       }
@@ -269,11 +265,8 @@ export default {
 
       for (let i = 0; i < this.tabsDialog.length; i++) {
         const element = this.tabsDialog[i];
-        console.log(element);
-        if (this.$refs[element.ref] !== referenciaItem) {
-          if (this.$refs[element.ref].classList.contains("open"))
-            this.$refs[element.ref].classList.remove("open");
-        }
+        if (this.$refs[element.ref].classList.contains("open"))
+          this.$refs[element.ref].classList.remove("open");
       }
 
       for (let i = 0; i < referenciaAllButtons.length; i++) {
@@ -316,17 +309,18 @@ export default {
       this.shadowObject.shadowLateral = "0";
       this.shadowObject.shadowBottom = "0";
       this.shadowObject.shadowExpanse = "0";
-      this.shadowObject.shadowCor = "transparent";
+      this.shadowObject.shadowCor = "#000000";
       this.$emit("callbackAc", this.shadowObject);
     },
     // Shadow Input
     // Text Input
     getTextCreated(valor) {
+      var newText = { texto: valor };
+      this.textObject.push(newText);
+    },
+    insereTextCreated(valor) {
       console.log(valor);
-      var Arroz = { texto: valor };
-      console.log(Arroz);
-      this.textObject.push(Arroz);
-      console.log(this.textObject);
+      this.$emit("callbackTextoInsereBloco", valor);
     },
     // Text Input
   },

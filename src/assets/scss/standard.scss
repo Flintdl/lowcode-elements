@@ -140,7 +140,7 @@ input[type="checkbox"] {
   z-index: 998;
   &.sf-minimized-dialog {
     overflow: hidden;
-    height: 47px;
+    height: 47px !important;
   }
 }
 
@@ -411,5 +411,78 @@ input[type="checkbox"] {
     display: block;
     z-index: 9999;
     opacity: 0.8;
+  }
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type="range"].input-range-animation {
+    overflow: hidden;
+    -webkit-appearance: none;
+    border-radius: 12px;
+  }
+  input[type="range"].input-range-animation::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 10px;
+    color: #444;
+    transition: box-shadow 0.2s ease-in-out;
+  }
+  input[type="range"].input-range-animation::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: pointer;
+    background: #fff;
+    box-shadow: -330px 0 0 324px #1597ff, inset 0 0 0 24px #1597ff;
+    border-radius: 50%;
+    transition: box-shadow 0.2s ease-in-out;
+    position: relative;
+  }
+  input[type="range"].input-range-animation:active::-webkit-slider-thumb {
+    background: #fff;
+    box-shadow: -330px 0 0 324px #1597ff, inset 0 0 0 3px #1597ff;
+  }
+  .h4-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 6px;
+    height: 0;
+    position: relative;
+  }
+  .h4-container .h4-subcontainer {
+    width: 100%;
+    position: relative;
+  }
+  .h4-container .h4-subcontainer h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    color: #fff !important;
+    font-size: 0.8rem;
+    padding-top: 20px;
+    transform-origin: center -10px;
+    transform: translateX(-50%);
+    transition: margin-top 0.15s ease-in-out, opacity 0.15s ease-in-out;
+    z-index: 99;
+  }
+  .h4-container .h4-subcontainer h4 span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 10px;
+    left: 0;
+    background-color: #1597ff;
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(45deg);
+    z-index: -1;
+  }
+  input:not(:active) + .h4-container h4 {
+    opacity: 0;
+    margin-top: -10px;
+    pointer-events: none;
   }
 }

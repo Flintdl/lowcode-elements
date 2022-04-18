@@ -64,8 +64,8 @@
 // @ is an alias to /src
 
 import DivGrid from "@/components/templates/DivGrid.vue";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism-okaidia.min.css";
+import Prism from "prismjs";
+import "prismjs/themes/prism-okaidia.min.css";
 
 export default {
   name: "HomeView",
@@ -137,9 +137,9 @@ export default {
     },
   },
   mounted() {
-    // window.Prism = window.Prism || {};
-    // window.Prism.manual = true;
-    // Prism.highlightAll();
+    window.Prism = window.Prism || {};
+    window.Prism.manual = true;
+    Prism.highlightAll();
     this.arroz = this.$refs.previewGrid?.clientHeight;
     this.valorRecalculado = this.valor / this.quantidadeLinha;
   },

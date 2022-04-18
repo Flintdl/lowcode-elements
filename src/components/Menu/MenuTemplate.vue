@@ -290,7 +290,6 @@ export default {
 
       function doDrag(e) {
         divResize.style.width = startWidth - e.clientX + startX + "px";
-        this.divResizeWidth = divResize.offsetWidth;
       }
 
       function stopDrag() {
@@ -381,6 +380,14 @@ export default {
     getValorPosicaoBloco(valor) {
       this.checkValue = valor;
     },
+  },
+  created() {
+    this.$watch("this.$refs.sfBackgroundResize", () => {
+      console.log(this.divResizeWidth);
+      this.divResizeWidth = document.defaultView.getComputedStyle(
+        this.$refs.sfBackgroundResize
+      ).width;
+    });
   },
 };
 </script>

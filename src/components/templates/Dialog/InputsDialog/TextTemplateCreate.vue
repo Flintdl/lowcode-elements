@@ -10,11 +10,18 @@
       contenteditable="true"
     >
       {{ texto.texto }}
-      <i
-        @click="removeTexto"
-        contenteditable="false"
-        class="mdi mdi-close sf-text-lg sf-cursor-pointer sf-text-danger sf-dropdown-action"
-      ></i>
+      <div class="sf-display-flex sf-align-items-center">
+        <i
+          @click="removeTexto"
+          contenteditable="false"
+          class="mdi mdi-close sf-mr-3 sf-text-lg sf-cursor-pointer sf-text-danger sf-dropdown-action"
+        ></i>
+        <i
+          @click="compartilhaTexto"
+          contenteditable="false"
+          class="mdi mdi-send sf-text-lg sf-cursor-pointer sf-text-info sf-dropdown-action"
+        ></i>
+      </div>
     </div>
     <!-- v-model="valor" -->
     <input
@@ -39,6 +46,11 @@ export default {
   props: {
     valorInput: Array,
   },
+  beforeMount() {
+    if (localStorage.getItem("textLabel")) {
+      this.textLabel = JSON.parse(localStorage.getItem("textLabel"));
+    }
+  },
   methods: {
     insertTexto() {
       var date = new Date().getTime();
@@ -46,21 +58,30 @@ export default {
       this.textLabel.push(novoTexto);
       this.$refs.novoTexto.value = "";
       this.$refs.novoTexto.focus();
+      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
     },
     editarTexto(e) {
       var objIndex = this.textLabel.findIndex(
         (obj) => obj.id == e.currentTarget.id
       );
       this.textLabel[objIndex].texto = e.currentTarget.innerText;
+      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
     },
     removeTexto(e) {
       this.textLabel = this.textLabel.filter(function (returnableObjects) {
         return (
-          returnableObjects.texto !== e.currentTarget.parentElement.innerText
+          returnableObjects.texto !==
+          e.currentTarget.parentElement.parentElement.innerText
         );
       });
+      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
     },
-    renderTexto() {},
+    compartilhaTexto(e) {
+      this.$emit(
+        "callbackTextoInsere",
+        e.currentTarget.parentElement.parentElement.innerText
+      );
+    },
   },
   computed: {
     valor: {
