@@ -65,7 +65,7 @@ hr {
   box-sizing: content-box;
   height: 0;
   overflow: visible;
-  border: 1px solid #f1f1f2;
+  border: 2px solid #f1f1f2;
   border-bottom: 0;
 }
 
@@ -1576,6 +1576,10 @@ a:hover {
 
 .sf-text-muted {
   color: $mutedColor !important;
+}
+
+.sf-text-card {
+  color: $cardColor !important;
 }
 
 .sf-text-primary {
@@ -3361,6 +3365,10 @@ a:hover {
 
 .sf-bg-third {
   background-color: $thirdColor !important;
+}
+
+.sf-bg-muted {
+  background-color: $cardColor !important;
 }
 
 .sf-bg-success {

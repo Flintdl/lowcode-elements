@@ -1,50 +1,27 @@
 <template>
-  <div class="sf-col-12 sf-form-group">
+  <div
+    class="sf-col-12 sf-form-group sf-justify-content-between sf-display-flex sf-flex-wrap"
+  >
     <label class="sf-label">Shadow Bottom</label>
-    <div class="sf-input-group sf-align-items-center">
-      <div
-        class="sf-input-group-append sf-display-flex sf-justify-content-center"
-      >
-        <div
-          class="sf-display-flex sf-align-items-center sf-justify-content-center sf-border-left-0 sf-border-radius sf-border-radius-left-0 sf-pr-2 sf-text-info sf-font-weight-bold sf-min-80-px"
-        >
-          <div class="sf-input-group">
-            <input
-              type="number"
-              min="-50"
-              max="50"
-              v-model="valor"
-              class="sf-text-md sf-height-fit-content sf-pr-0 sf-pl-1 sf-border-right-0 sf-border-radius-right-0 sf-text-capitalize"
-              placeholder="Curva da Borda"
-            />
-            <div
-              class="sf-input-group-append sf-display-flex sf-justify-content-center"
-            >
-              <div
-                class="sf-display-flex sf-align-items-center sf-border sf-justify-content-center sf-border-left-0 sf-border-radius sf-border-radius-left-0 sf-pr-1 sf-text-info sf-font-weight-bold sf-text-sm"
-              >
-                PX
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="sf-display-flex sf-flex-wrap sf-width-100 sf-align-items-center"
-      >
-        <input
-          type="range"
-          min="-50"
-          max="50"
-          @input="porcentagemRange"
-          id="inputShadowBottom"
-          v-model="valor"
-          class="sf-px-0 sf-text-capitalize input-range-animation"
-        />
-        <div class="h4-container">
-          <div class="h4-subcontainer">
-            <h4>0<span></span></h4>
-          </div>
+    <span class="sf-font-weight-bold sf-text-muted">
+      {{ valorInput }} Pixels
+    </span>
+
+    <div
+      class="sf-display-flex sf-flex-wrap sf-width-100 sf-align-items-center"
+    >
+      <input
+        type="range"
+        min="-50"
+        max="50"
+        @input="porcentagemRange"
+        id="inputShadowBottom"
+        v-model="valor"
+        class="sf-px-0 sf-text-capitalize input-range-animation"
+      />
+      <div class="h4-container">
+        <div class="h4-subcontainer">
+          <h4>0<span></span></h4>
         </div>
       </div>
     </div>

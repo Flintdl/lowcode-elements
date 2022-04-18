@@ -21,6 +21,8 @@
       v-on:callback="closeDialog"
       v-on:callbackMinimized="minimizedDialog"
       v-on:callbackTextoInsereBloco="insereTexto"
+      v-on:callbackTextoEditaBloco="editaTexto"
+      v-on:callbackTextoRemoveBloco="removeTexto"
       v-on:callbackAc="getValorCampoAc"
       :class="componentMinimized"
     />
@@ -113,6 +115,10 @@ export default {
   components: {
     DialogBlocoConfiguracao,
   },
+  beforeMount() {
+    if (localStorage.getItem("textLabelBloco"))
+      this.textObject = JSON.parse(localStorage.getItem("textLabelBloco"));
+  },
   methods: {
     showOptions: function (e, params) {
       switch (params) {
@@ -148,16 +154,37 @@ export default {
     minimizedDialog: function (minimizedDialog) {
       this.componentMinimized = minimizedDialog;
     },
+    removeTexto: function (removeTexto) {
+      this.textObject = this.textObject.filter(function (returnableObjects) {
+        return returnableObjects.id !== removeTexto.id;
+      });
+      localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+    },
+    editaTexto: function (removeTexto) {
+      var objIndex = this.textObject.findIndex(
+        (obj) => obj.id == removeTexto.id
+      );
+      this.textObject[objIndex].texto = removeTexto.texto;
+      localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+    },
     insereTexto: function (insereTexto) {
-      console.log(insereTexto);
-      var novoTexto = { texto: insereTexto };
-      this.textObject.push(novoTexto);
+      var objIndex = this.textObject.find((obj) => obj.id === insereTexto.id);
+      if (!objIndex) {
+        this.textObject.push(insereTexto);
+        localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+      }
     },
     getValorCampoAc(valor) {
       this.shadowLateral = valor.shadowLateral;
       this.shadowBottom = valor.shadowBottom;
       this.shadowExpanse = valor.shadowExpanse;
       this.shadowCor = valor.shadowCor;
+    },
+    created() {
+      this.$watch("textObject", () => {
+        console.log("Alterou", this.textObject);
+        // this.textObject
+      });
     },
   },
   computed: {

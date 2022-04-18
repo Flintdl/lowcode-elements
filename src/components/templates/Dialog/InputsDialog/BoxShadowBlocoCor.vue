@@ -1,7 +1,7 @@
 <template>
   <div class="sf-col sf-form-group">
     <label class="sf-label">Cor do Shadow</label>
-    <ul class="sf-colors-list sf-display-flex sf-mb-2">
+    <ul class="sf-colors-list sf-display-flex sf-mb-2 sf-align-items-center">
       <li
         v-for="(color, i) of colorsList"
         v-bind:key="i"
@@ -40,6 +40,24 @@
           <i class="mdi mdi-plus sf-text-lg sf-text-standard"></i>
         </span>
       </li>
+      <li
+        class="sf-colors-itens sf-colors-itens-new sf-ml-auto sf-position-relative"
+      >
+        <div
+          v-if="clipboardVerify"
+          ref="clipboardMensagem"
+          class="sf-clipboard-message sf-py-1 sf-display-block sf-border-radius sf-text-white sf-text-center sf-position-absolute"
+        >
+          Copiado
+        </div>
+        <label
+          class="sf-text-md sf-py-1 sf-px-2 sf-border-radius sf-text-default sf-bg-muted sf-font-weight-extra-bold sf-cursor-pointer"
+          style="height: fit-content; width: 100px"
+          @click="clipboardCopy"
+        >
+          Hex: {{ valorInput }}
+        </label>
+      </li>
     </ul>
     <input
       type="color"
@@ -59,6 +77,7 @@ export default {
   data: function () {
     return {
       verifyButton: true,
+      clipboardVerify: false,
       colorsList: [],
     };
   },
@@ -105,14 +124,18 @@ export default {
       }
     },
     editColorArray(e) {
-      var objIndex = this.colorsList.find(
-        (obj) =>
-          obj.hexadecimal ==
-          e.currentTarget.parentElement.getAttribute("data-color")
+      var objIndexCompare = this.colorsList.find(
+        (obj) => obj.hexadecimal === this.$refs.novaCor.value
       );
-      console.log(objIndex);
-      objIndex.hexadecimal = this.$refs.novaCor.value;
-      localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
+      if (!objIndexCompare) {
+        var objIndex = this.colorsList.find(
+          (obj) =>
+            obj.hexadecimal ==
+            e.currentTarget.parentElement.getAttribute("data-color")
+        );
+        objIndex.hexadecimal = this.$refs.novaCor.value;
+        localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
+      }
     },
     removeColorArray(e) {
       this.colorsList = this.colorsList.filter(function (returnableObjects) {
@@ -125,6 +148,13 @@ export default {
     },
     setValueColor(e) {
       this.$emit("callback", e.currentTarget.getAttribute("data-color"));
+    },
+    clipboardCopy() {
+      this.clipboardVerify = true;
+      navigator.clipboard.writeText(this.valorInput);
+      setTimeout(() => {
+        this.clipboardVerify = false;
+      }, 1500);
     },
   },
   created() {
@@ -140,10 +170,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sf-clipboard-message {
+  background-color: #5dc25b;
+  top: calc(-100% - 24px);
+  width: 100%;
+  left: 0;
+
+  &:after {
+    content: "";
+    position: absolute;
+    display: inline-block;
+    border: 7px solid transparent;
+    border-top: 8px solid #5dc25b;
+    border-bottom: 0 none;
+    bottom: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
 .sf-remove-color,
 .sf-edit-color {
-  background-color: #fdfdfd;
-  border: 2px solid #e7e7e7;
+  background-color: #dcdee7;
+  border: 2px solid #dcdee7;
   border-radius: 50px;
   right: -8px;
   top: -6px;
@@ -161,7 +209,7 @@ export default {
   .sf-colors-itens {
     .sf-colors-itens-input {
       border-radius: 50px;
-      border: 2px solid #ffffff;
+      border: 2px solid #dcdee7;
       box-shadow: 1px 2px 11px 0 rgba(0, 0, 0, 0.1);
       &:hover {
         .sf-remove-color,

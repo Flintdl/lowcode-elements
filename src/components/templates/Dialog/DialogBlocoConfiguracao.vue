@@ -1,6 +1,7 @@
 <template>
   <div
     :ref="idBloco"
+    @mousedown="zIndexDialog"
     class="sf-dialog-content sf-position-fixed sf-bg-white sf-border-radius"
   >
     <div
@@ -86,6 +87,8 @@
           :valorInput="textObject.texto"
           v-on:callback="getTextCreated"
           v-on:callbackTextoInsere="insereTextCreated"
+          v-on:callbackTextoEditaBloco="editaTextCreated"
+          v-on:callbackTextoRemoveBloco="removeTextCreated"
         />
       </div>
     </div>
@@ -163,6 +166,15 @@ export default {
     // linha;
   },
   methods: {
+    zIndexDialog(e) {
+      var divZindexTarget = e.currentTarget;
+      var divZindex = document.querySelectorAll(".sf-dialog-content");
+      for (let i = 0; i < divZindex.length; i++) {
+        const element = divZindex[i];
+        element.style.zIndex = 998;
+      }
+      divZindexTarget.style.zIndex = 999;
+    },
     moveDialog(e) {
       var divResize = e.currentTarget.parentElement;
       var target = e.currentTarget;
@@ -209,11 +221,60 @@ export default {
             }, 7);
             document.body.appendChild(previewDrop);
           }
-        } else {
-          if (document.querySelector(".preview-Drop")) {
+        } else if (
+          divResize.computedStyleMap().get("left").value +
+            divResize.computedStyleMap().get("width").value >=
+          document.body.offsetLeft + document.body.offsetWidth - 50
+        ) {
+          document.querySelector(".sf-content-page").style.marginRight =
+            "30rem";
+          if (!document.querySelector(".preview-drop-dashed")) {
+            let div = document.createElement("div");
+            div.className =
+              "preview-drop-dashed sf-display-flex sf-align-items-center sf-justify-content-center";
+            div.style.width = "30rem";
+            div.style.height = "100vh";
+            div.style.border = "2px dashed salmon";
+            div.style.transition = "right .15s ease";
+            div.style.right = "-30rem";
+            div.style.position = "fixed";
+            div.style.top = "0";
+            div.innerText = "Solte o Elemento";
+
             document
-              .querySelector(".preview-Drop")
-              .remove(document.querySelector(".preview-Drop"));
+              .querySelector(".sf-content-page")
+              .parentNode.insertBefore(
+                div,
+                document.querySelector(".sf-content-page").nextSibling
+              );
+            setTimeout(() => {
+              div.style.right = "0rem";
+            }, 7);
+          }
+          // if (!document.querySelector(".preview-Drop")) {
+          //   previewDrop = document.createElement("div");
+          //   previewDrop.style.height = "100vh";
+          //   previewDrop.style.right = "-50px";
+          //   previewDrop.classList.add("preview-Drop");
+          //   previewDrop.style.borderRadius = "0px";
+          //   previewDrop.style.transition = "right .07s linear";
+          //   previewDrop.style.width = "50px";
+          //   previewDrop.style.bottom = "0";
+          //   previewDrop.style.backgroundColor = "#e9206399";
+          //   previewDrop.style.position = "fixed";
+          //   previewDrop.style.zIndex = "500";
+          //   setTimeout(() => {
+          //     previewDrop.style.right = "0px";
+          //   }, 7);
+          //   document.body.appendChild(previewDrop);
+          // }
+        } else {
+          document.querySelector(".sf-content-page").style.marginRight =
+            "initial";
+          if (document.querySelector(".preview-drop-dashed")) {
+            document
+              .querySelector(".preview-drop-dashed")
+              .remove(document.querySelector(".preview-drop-dashed"));
           }
         }
       }
@@ -223,20 +284,62 @@ export default {
         document.documentElement.removeEventListener("mouseup", stopDrag);
         target.classList.remove("sf-cursor-grabbing");
         target.classList.add("sf-cursor-grab");
+
+        var caseDrop;
         if (
           divResize.computedStyleMap().get("left").value <=
           document.body.offsetLeft - 50
         ) {
-          divResize.style.top = "initial";
-          divResize.style.bottom = "0";
-          divResize.style.left = "0";
-          divResize.style.width = "clamp(150px, 500px, 900px)";
-          divResize.style.height = "100%";
-        } else {
-          divResize.style.width = "clamp(150px, 50ch, 900px)";
-          divResize.style.bottom = "initial";
-          divResize.style.height = "fit-content";
-          return;
+          caseDrop = "leftCase";
+        } else if (
+          divResize.computedStyleMap().get("left").value +
+            divResize.computedStyleMap().get("width").value >=
+          document.body.offsetLeft + document.body.offsetWidth - 50
+        ) {
+          caseDrop = "rightCase";
+        } else if (
+          divResize.computedStyleMap().get("left").value >=
+          document.body.offsetLeft + document.body.offsetWidth / 2 - 50
+        ) {
+          divResize.computedStyleMap().get("left").value >=
+            document.body.offsetLeft - 50;
+          caseDrop = "CancelLeftCase";
+        } else if (
+          divResize.computedStyleMap().get("left").value +
+            divResize.computedStyleMap().get("width").value <=
+          document.body.offsetLeft + document.body.offsetWidth - 50
+        ) {
+          caseDrop = "CancelrightCase";
+        }
+
+        console.log(caseDrop);
+
+        switch (caseDrop) {
+          case "leftCase":
+            divResize.style.top = "initial";
+            divResize.style.bottom = "0";
+            divResize.style.left = "0";
+            divResize.style.height = "100%";
+            break;
+          case "CancelLeftCase":
+            divResize.style.bottom = "initial";
+            divResize.style.height = "fit-content";
+            break;
+          case "rightCase":
+            divResize.style.top = "initial";
+            divResize.style.bottom = "0";
+            divResize.style.left = "initial";
+            divResize.style.right = "0";
+            divResize.style.height = "100%";
+            document.querySelector(".sf-content-page").style.marginRight =
+              "30rem";
+            break;
+          case "CancelrightCase":
+            document.querySelector(".sf-content-page").style.marginRight =
+              "initial";
+            divResize.style.bottom = "initial";
+            divResize.style.height = "fit-content";
+            break;
         }
       }
     },
@@ -319,8 +422,13 @@ export default {
       this.textObject.push(newText);
     },
     insereTextCreated(valor) {
-      console.log(valor);
       this.$emit("callbackTextoInsereBloco", valor);
+    },
+    editaTextCreated(valor) {
+      this.$emit("callbackTextoEditaBloco", valor);
+    },
+    removeTextCreated(valor) {
+      this.$emit("callbackTextoRemoveBloco", valor);
     },
     // Text Input
   },
@@ -354,7 +462,6 @@ export default {
   display: none !important;
   &.open {
     display: block !important;
-    background-color: #f0f0f48c;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     height: 100%;
