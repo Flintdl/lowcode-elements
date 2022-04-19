@@ -4,14 +4,14 @@
     <label class="sf-label"> Inserir Texto </label>
     <div v-if="textLabel">
       <TextoCustomizacao
-        class="sf-display-flex sf-align-items-center sf-justify-content-between sf-text-preview sf-border-2 sf-border-radius sf-border-dashed sf-px-3 sf-py-2 sf-form-group"
+        class="sf-texto-customizacao sf-display-flex sf-align-items-center sf-justify-content-between sf-text-preview sf-border-2 sf-border-radius sf-border-dashed sf-px-3 sf-py-2 sf-form-group"
         v-for="(texto, i) of textLabel"
         :textoDescricao="texto.texto"
         :textoID="String(texto.id)"
         v-on:callbackEditar="editarTexto"
-        v-on:callbackConfigurar="configuraTexto"
         v-on:callbackRemover="removeTexto"
         v-on:compartilhaTexto="compartilhaTexto"
+        v-on:callbackFontProps="fontProps"
         :componentText="componentText"
         :id="texto.id"
         v-bind:key="i"
@@ -49,12 +49,12 @@ export default {
   data: function () {
     return {
       textLabel: [],
-      componentText: null,
-      componentTextID: null,
-      textoDescrito: null,
     };
   },
   props: {
+    componentText: null,
+    componentTextID: null,
+    textoDescrito: null,
     valorInput: Array,
   },
   components: {
@@ -108,23 +108,31 @@ export default {
       };
       this.$emit("callbackTextoInsere", novoTexto);
     },
-    configuraTexto(target) {
-      this.componentText = "DialogTextConfiguracao";
-      this.componentTextID = target.parentElement.parentElement.id;
-      this.textoDescrito = target.parentElement.parentElement.innerText;
-    },
-  },
-  computed: {
-    valor: {
-      get() {
-        return this.valorInput;
-      },
-      set(valorInput) {
-        this.$emit("callback", valorInput);
-      },
+    fontProps(font) {
+      this.$emit("callbackFontProps", font);
     },
   },
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.sf-texto-customizacao {
+  &:hover {
+    border-color: #e7515a !important;
+  }
+}
+input:invalid {
+  animation: shake 300ms;
+}
+@keyframes shake {
+  25% {
+    transform: translate(4px);
+  }
+  50% {
+    transform: translate(-4px);
+  }
+  100% {
+    transform: translate(4px);
+  }
+}
+</style>

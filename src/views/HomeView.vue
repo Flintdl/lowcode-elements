@@ -100,7 +100,7 @@ export default {
         // width: `calc((${this.valor}% - ${this.inputGap}px * ${
         //   this.quantidadeLinha - "1"
         // }) / ${this.quantidadeLinha})`,
-        height: this.valorHeight + "px",
+        "min-height": this.valorHeight + "px",
         "border-radius": this.inputBorderRadius + "px",
         border:
           this.inputBorder +

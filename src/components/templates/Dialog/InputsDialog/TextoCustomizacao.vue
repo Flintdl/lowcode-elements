@@ -4,6 +4,10 @@
       v-bind:is="componentText"
       :idBlocoTexto="textoID"
       :textoDescrito="textoDescricao"
+      :fontProps="fontProps"
+      v-on:callbackProps="fontProps"
+      v-on:callbackCloseDialog="closeDialog"
+      style="top: 5%; left: 25%"
     />
     <p
       @blur="editarTexto"
@@ -37,44 +41,43 @@ import DialogTextConfiguracao from "@/components/templates/Dialog/DialogTextConf
 export default {
   data: function () {
     return {
-      textLabel: [],
+      componentText: null,
       componentTextID: null,
       textoDescrito: null,
     };
   },
   props: {
     textoDescricao: String,
-    componentText: String,
     valorObject: String,
     textoID: String,
+    textLabel: Object,
   },
-  beforeMount() {
-    if (localStorage.getItem("textLabel")) {
-      this.textLabel = JSON.parse(localStorage.getItem("textLabel"));
-    }
-  },
+
   components: {
     DialogTextConfiguracao,
   },
   methods: {
-    editarTexto(e) {
-      console.log(e);
-      this.$emit("callbackEditar", e.currentTarget);
+    configuraTexto(target) {
+      target = target.currentTarget;
+      this.componentText = "DialogTextConfiguracao";
+      this.componentTextID = target.parentElement.parentElement.id;
+      this.textoDescrito = target.parentElement.parentElement.innerText;
     },
-    configuraTexto(e) {
-      console.log(e);
-      this.$emit("callbackConfigurar", e.currentTarget);
+    editarTexto(event) {
+      this.$emit("callbackEditar", event.currentTarget);
     },
-    removeTexto(e) {
-      console.log(e);
-      this.$emit("callbackRemover", e.currentTarget);
+    removeTexto(event) {
+      this.$emit("callbackRemover", event.currentTarget);
     },
-    compartilhaTexto(e) {
-      console.log(e);
-      this.$emit("callbackCompartilhar", e.currentTarget);
+    compartilhaTexto(event) {
+      this.$emit("compartilhaTexto", event.currentTarget);
+    },
+    fontProps(font) {
+      this.$emit("callbackFontProps", font);
+    },
+    closeDialog: function (closeDialog) {
+      this.componentText = closeDialog;
     },
   },
 };
 </script>
-
-<style></style>

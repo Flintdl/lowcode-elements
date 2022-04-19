@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sf-position-relative sf-tooltip-actions-hover"
+    class="sf-position-relative sf-p-3 sf-tooltip-actions-hover"
     :style="[cssDefinido, styleComputed]"
     :ref="idBloco"
   >
@@ -9,6 +9,7 @@
         class="sf-text-white sf-text-center"
         v-for="(texto, i) of textObject"
         v-bind:key="i"
+        :style="fontCss"
       >
         {{ texto.texto }}
       </p>
@@ -23,6 +24,7 @@
       v-on:callbackTextoInsereBloco="insereTexto"
       v-on:callbackTextoEditaBloco="editaTexto"
       v-on:callbackTextoRemoveBloco="removeTexto"
+      v-on:callbackFontProps="fontProps"
       v-on:callbackAc="getValorCampoAc"
       :class="componentMinimized"
     />
@@ -102,6 +104,15 @@ export default {
       shadowBottom: this.shadowBottom,
       shadowExpanse: this.shadowExpanse,
       shadowCor: this.shadowCor,
+      fontFamilyData: this.fontFamilyData,
+      valorfontSizeData: this.valorfontSizeData,
+      estiloFontData: this.estiloFontData,
+      fontPropsMargin: {
+        marginLeft: null,
+        marginTop: null,
+        marginRight: null,
+        marginBottom: null,
+      },
       textObject: [],
     };
   },
@@ -160,12 +171,14 @@ export default {
       });
       localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
     },
-    editaTexto: function (removeTexto) {
+    editaTexto: function (editaTexto) {
       var objIndex = this.textObject.findIndex(
-        (obj) => obj.id == removeTexto.id
+        (obj) => obj.id == editaTexto.id
       );
-      this.textObject[objIndex].texto = removeTexto.texto;
-      localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+      if (this.textObject[objIndex]) {
+        this.textObject[objIndex].texto = editaTexto.texto;
+        localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+      }
     },
     insereTexto: function (insereTexto) {
       var objIndex = this.textObject.find((obj) => obj.id === insereTexto.id);
@@ -173,6 +186,15 @@ export default {
         this.textObject.push(insereTexto);
         localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
       }
+    },
+    fontProps(font) {
+      this.estiloFontData = font.style;
+      this.fontFamilyData = font.family;
+      this.valorfontSizeData = font.size;
+      this.fontPropsMargin.marginTop = font.fontMargin.marginTop + "px";
+      this.fontPropsMargin.marginRight = font.fontMargin.marginRight + "px";
+      this.fontPropsMargin.marginBottom = font.fontMargin.marginBottom + "px";
+      this.fontPropsMargin.marginLeft = font.fontMargin.marginLeft + "px";
     },
     getValorCampoAc(valor) {
       this.shadowLateral = valor.shadowLateral;
@@ -196,6 +218,16 @@ export default {
           ${this.shadowBottom ? this.shadowBottom : "2"}px 
           ${this.shadowExpanse ? this.shadowExpanse : "11"}px 0
           ${this.shadowCor ? this.shadowCor : "rgba(0, 0, 0, .1)"} `,
+      };
+    },
+    fontCss() {
+      var marginProps = this.fontPropsMargin;
+      console.log(marginProps);
+      return {
+        "font-style": this.estiloFontData,
+        "font-family": this.fontFamilyData,
+        "font-size": this.valorfontSizeData + "rem",
+        margin: `${marginProps.marginTop} ${marginProps.marginRight} ${marginProps.marginBottom} ${marginProps.marginLeft}`,
       };
     },
   },

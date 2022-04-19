@@ -1,6 +1,6 @@
 <template>
   <div class="sf-col-6 sf-form-group">
-    <label class="sf-label">Altura Bloco</label>
+    <label class="sf-label">Altura Mínima</label>
     <div class="sf-input-group">
       <div
         class="sf-input-group-append sf-display-flex sf-justify-content-center"

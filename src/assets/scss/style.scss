@@ -42,6 +42,19 @@
   -webkit-user-select: none;
 }
 
+::-webkit-scrollbar {
+  background: #e0e0e0;
+  height: 4px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bebebe;
+}
+::-webkit-scrollbar-track {
+  background-color: #e0e0e0;
+}
+
 html {
   min-height: 100%;
   position: relative;
@@ -3265,6 +3278,10 @@ a:hover {
 
 .sf-border-secondary {
   border-color: $secondaryColor !important;
+}
+
+.sf-border-bulk {
+  border-color: $bulkColor !important;
 }
 
 .sf-border-success {

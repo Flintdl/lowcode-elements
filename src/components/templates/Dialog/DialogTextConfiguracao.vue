@@ -13,11 +13,6 @@
         Texto ID {{ idBlocoTexto }}
         <div>
           <i
-            @click="minimizeAction"
-            class="mdi sf-mr-3 sf-text-lg sf-cursor-pointer sf-text-white sf-dropdown-action"
-            :class="iconVerify ? 'mdi-window-maximize' : 'mdi-window-minimize'"
-          ></i>
-          <i
             @click="closeAction"
             class="mdi mdi-close sf-text-lg sf-cursor-pointer sf-text-white sf-dropdown-action"
           ></i>
@@ -25,8 +20,185 @@
       </span>
     </div>
     <div class="sf-dialog-body">
-      <div class="sf-btn-select-content" style="visibility: visible"></div>
-      <input type="text" v-model="valor" />
+      <div class="sf-row sf-px-4 sf-py-3">
+        <div class="sf-col-12 sf-form-group">
+          <p
+            class="sf-my-2 sf-text-lg sf-position-relative sf-border-radius sf-px-3 sf-py-4 sf-bg-muted sf-text-center"
+            :style="{
+              'font-style': fontProps.style,
+              'font-family': fontProps.family,
+            }"
+          >
+            <label
+              style="top: 0; left: 0.5rem"
+              class="sf-position-absolute sf-text-sm sf-display-block"
+            >
+              <sub><i>Preview</i></sub>
+            </label>
+            {{ textoDescrito }}
+          </p>
+        </div>
+        <div
+          class="sf-col-12 sf-mb-3 sf-justify-content-between sf-display-flex sf-flex-wrap"
+        >
+          <label class="sf-label">Tamanho da Fonte</label>
+          <span class="sf-font-weight-bold sf-text-muted">
+            {{ fontProps.size }} Rem
+          </span>
+          <div
+            class="sf-display-flex sf-flex-wrap sf-width-100 sf-align-items-center"
+          >
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="0.5"
+              @input="
+                porcentagemRange($event);
+                onSelectType();
+              "
+              v-model="fontProps.size"
+              class="sf-px-0 sf-text-capitalize input-range-animation"
+            />
+            <div class="h4-container">
+              <div class="h4-subcontainer">
+                <h4>0<span></span></h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sf-col-12 sf-mb-3">
+          <span
+            class="sf-mb-3 sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+          >
+            Configurações de Fonte
+            <hr class="sf-width-100 sf-ml-4"
+          /></span>
+          <label class="sf-label">Estilo de Fonte</label>
+          <select
+            v-model="fontProps.style"
+            @change="onSelectType"
+            class="sf-text-capitalize"
+          >
+            <option
+              v-bind:key="item.value"
+              :value="item.value"
+              :disabled="item.disable"
+              v-for="item of items"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+        <div class="sf-col-12 sf-mb-3">
+          <label class="sf-label">Tipo de Fonte</label>
+          <select
+            v-model="fontProps.family"
+            @change="onSelectType"
+            class="sf-text-capitalize"
+          >
+            <option
+              v-bind:key="item.value"
+              :value="item.value"
+              :disabled="item.disable"
+              v-for="item of fontFamily"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+        </div>
+        <div class="sf-col-12">
+          <span
+            class="sf-mb-3 sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+          >
+            Espaçamento Fonte
+            <hr class="sf-width-100 sf-ml-4"
+          /></span>
+          <div class="sf-row">
+            <div class="sf-col-12">
+              <div
+                class="sf-container-bulk sf-display-grid sf-px-2 sf-py-4 sf-border-bulk sf-border-2 sf-border-radius"
+              >
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="fontProps.fontMargin.marginTop + 'px'"
+                    @input="onSelectType"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectType"
+                    class="input-range-tickes-bulk"
+                    v-model="fontProps.fontMargin.marginTop"
+                  />
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="fontProps.fontMargin.marginRight + 'px'"
+                    @input="onSelectType"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectType"
+                    class="input-range-tickes-bulk"
+                    v-model="fontProps.fontMargin.marginRight"
+                  />
+                </div>
+                <div
+                  class="sf-container-bulk__itens sf-py-3 sf-px-5 sf-border-radius sf-border-info sf-border-2 sf-text-center"
+                >
+                  <i
+                    class="mdi mdi-link-variant sf-text-info sf-text-xl sf-text-white sf-dropdown-action"
+                  ></i>
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="fontProps.fontMargin.marginBottom + 'px'"
+                    @input="onSelectType"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectType"
+                    class="input-range-tickes-bulk"
+                    v-model="fontProps.fontMargin.marginBottom"
+                  />
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="fontProps.fontMargin.marginLeft + 'px'"
+                    @input="onSelectType"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectType"
+                    class="input-range-tickes-bulk"
+                    v-model="fontProps.fontMargin.marginLeft"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,29 +207,43 @@
 // Shadow
 
 export default {
+  data: function () {
+    return {
+      iconVerify: false,
+      items: [
+        { label: "Normal", value: "normal" },
+        { label: "Italic", value: "italic" },
+        { label: "Oblique", value: "oblique" },
+      ],
+      fontFamily: [
+        { label: "Nunito Sans", value: "'Nunito Sans', sans-serif" },
+        { label: "Times New Roman", value: "'Times New Roman', Times, serif" },
+        { label: "Arial", value: "Arial, sans-serif" },
+        { label: "Helvetica", value: "Helvetica, sans-serif" },
+      ],
+      fontProps: {
+        style: "normal",
+        family: "'Nunito Sans', sans-serif",
+        size: "1",
+        fontMargin: {
+          marginTop: "0",
+          marginRight: "0",
+          marginBottom: "0",
+          marginLeft: "0",
+        },
+      },
+    };
+  },
   props: {
     cardId: String,
     idBlocoTexto: String,
     textoDescrito: String,
-    valorTeste: String,
   },
-  computed: {
-    valor: {
-      get() {
-        return this.valorTeste;
-      },
-      set(valorTeste) {
-        this.$emit("callbackTeste", valorTeste);
-      },
-    },
-  },
-  components: {},
-  data: function () {
-    return {
-      iconVerify: false,
-    };
-  },
+
   methods: {
+    onSelectType() {
+      this.$emit("callbackProps", this.fontProps);
+    },
     moveDialog(e) {
       var divResize = e.currentTarget.parentElement;
       var target = e.currentTarget;
@@ -83,6 +269,12 @@ export default {
       function doDrag(e) {
         divResize.style.left = startLeft + e.clientX - startX + "px";
         divResize.style.top = startTop + e.clientY - startY + "px";
+
+        if (divResize.classList.contains("sf-drop-dialog")) {
+          divResize.classList.remove("sf-drop-dialog");
+          divResize.classList.remove("sf-drop-dialog-left");
+        }
+
         if (
           divResize.computedStyleMap().get("left").value <=
           document.body.offsetLeft - 50
@@ -122,101 +314,66 @@ export default {
           divResize.computedStyleMap().get("left").value <=
           document.body.offsetLeft - 50
         ) {
-          divResize.style.top = "initial";
-          divResize.style.bottom = "0";
-          divResize.style.left = "0";
-          divResize.style.width = "clamp(150px, 500px, 900px)";
-          divResize.style.height = "100%";
+          divResize.className += " sf-drop-dialog sf-drop-dialog-left";
         } else {
-          divResize.style.width = "clamp(150px, 50ch, 900px)";
-          divResize.style.bottom = "initial";
-          divResize.style.height = "fit-content";
+          divResize.classList.remove("sf-drop-dialog");
+          divResize.classList.remove("sf-drop-dialog-left");
           return;
         }
       }
     },
     closeAction() {
-      this.$emit("callback", null);
+      this.$emit("callbackCloseDialog", null);
       this.$emit("callbackMinimized", "");
     },
-    minimizeAction(e) {
-      var elementPai =
-        e.currentTarget.parentElement.parentElement.parentElement.parentElement;
-      if (elementPai.classList.contains("sf-minimized-dialog")) {
-        this.$emit("callbackMinimized", "");
-        this.iconVerify = false;
-      } else {
-        this.$emit("callbackMinimized", "sf-minimized-dialog");
-        this.iconVerify = true;
-      }
-    },
-    showContent(e) {
-      var referenciaItem = this.$refs[e.currentTarget.getAttribute("dataRef")];
-      var referenciaAllButtons = document.querySelectorAll(
-        `.sf-btn-select-dialog[dataRef]`
-      );
-
-      var referenciaItemCss = e.currentTarget;
-
-      for (let i = 0; i < this.tabsDialog.length; i++) {
-        const element = this.tabsDialog[i];
-        if (this.$refs[element.ref].classList.contains("open"))
-          this.$refs[element.ref].classList.remove("open");
-      }
-
-      for (let i = 0; i < referenciaAllButtons.length; i++) {
-        const element = referenciaAllButtons[i];
-        element.classList.remove("sf-btn-primary-hover");
-        element.classList.add("sf-btn-primary");
-      }
-
-      if (referenciaItem) {
-        referenciaItem.classList.toggle("open");
-        if (!referenciaItem.classList.contains("open")) {
-          referenciaItemCss.classList.remove("sf-btn-primary-hover");
-          referenciaItemCss.classList.add("sf-btn-primary");
-          referenciaItem.classList.remove("open");
-        } else {
-          referenciaItemCss.classList.remove("sf-btn-primary");
-          referenciaItemCss.classList.add("sf-btn-primary-hover");
-          referenciaItem.classList.add("open");
-        }
-      }
+    porcentagemRange(e) {
+      var h4Capture = e.currentTarget.nextElementSibling;
+      h4Capture = h4Capture.querySelector("h4");
+      h4Capture.innerHTML = e.currentTarget.value + "<span></span>";
+      e.currentTarget.style.filter =
+        "hue-rotate(" + e.currentTarget.value + "deg)";
+      h4Capture.style.cssText = `transform: translateX(calc(-50% - 20px))
+      }); left: calc(${e.currentTarget.value}% * 10)`;
+      h4Capture.style.cssText = `transform: translateX(-50%)
+      }); left: calc(${e.currentTarget.value}% * 10)`;
+      h4Capture.style.filter = "hue-rotate(" + e.currentTarget.value + "deg)";
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#svg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-// #line {
-//   stroke-width: 2px;
-//   stroke: rgb(0, 0, 0);
-// }
-.line {
-  height: 2px;
-  width: 1px;
-  background: salmon;
-  position: fixed;
-  -moz-transform-origin: 0% 0%;
-  -webkit-transform-origin: 0% 0%;
-  transform-origin: 0% 0%;
-}
-.sf-menu-content {
-  display: none !important;
-  &.open {
-    display: block !important;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    height: 100%;
+.sf-container-bulk {
+  .sf-container-bulk__itens {
+    input {
+      width: 70%;
+      margin: auto;
+      padding: 0;
+      background-color: #f0f4fb;
+      border: none;
+      height: 34px;
+    }
+    &:nth-child(1) {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    &:nth-child(2) {
+      grid-column: 4;
+      grid-row: 1;
+    }
+    &:nth-child(3) {
+      grid-column: 2 / span 2;
+      margin: -1rem 0;
+      grid-row: 2;
+    }
+    &:nth-child(4) {
+      grid-column: 1;
+      grid-row: 3;
+    }
+    &:nth-child(5) {
+      grid-column: 4;
+      grid-row: 3;
+    }
   }
 }
 </style>

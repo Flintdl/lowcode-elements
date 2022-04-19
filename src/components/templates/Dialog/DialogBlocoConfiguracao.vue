@@ -83,12 +83,13 @@
       :ref="'template-collapse_' + cardId"
     >
       <div class="sf-row sf-px-4">
+        <!-- :valorInput="textObject.texto"
+          v-on:callback="getTextCreated" -->
         <TextTemplateCreate
-          :valorInput="textObject.texto"
-          v-on:callback="getTextCreated"
           v-on:callbackTextoInsere="insereTextCreated"
           v-on:callbackTextoEditaBloco="editaTextCreated"
           v-on:callbackTextoRemoveBloco="removeTextCreated"
+          v-on:callbackFontProps="fontProps"
         />
       </div>
     </div>
@@ -155,7 +156,7 @@ export default {
         shadowExpanse: (this.shadowExpanse = "0"),
         shadowCor: (this.shadowCor = "#000000"),
       },
-      textObject: [],
+      // textObject: [],
     };
   },
   mounted() {
@@ -200,6 +201,12 @@ export default {
       function doDrag(e) {
         divResize.style.left = startLeft + e.clientX - startX + "px";
         divResize.style.top = startTop + e.clientY - startY + "px";
+
+        if (divResize.classList.contains("sf-drop-dialog-content")) {
+          divResize.classList.remove("sf-drop-dialog-content");
+          divResize.classList.remove("sf-drop-dialog-left");
+        }
+
         if (
           divResize.computedStyleMap().get("left").value <=
           document.body.offsetLeft - 50
@@ -251,23 +258,6 @@ export default {
               div.style.right = "0rem";
             }, 7);
           }
-          // if (!document.querySelector(".preview-Drop")) {
-          //   previewDrop = document.createElement("div");
-          //   previewDrop.style.height = "100vh";
-          //   previewDrop.style.right = "-50px";
-          //   previewDrop.classList.add("preview-Drop");
-          //   previewDrop.style.borderRadius = "0px";
-          //   previewDrop.style.transition = "right .07s linear";
-          //   previewDrop.style.width = "50px";
-          //   previewDrop.style.bottom = "0";
-          //   previewDrop.style.backgroundColor = "#e9206399";
-          //   previewDrop.style.position = "fixed";
-          //   previewDrop.style.zIndex = "500";
-          //   setTimeout(() => {
-          //     previewDrop.style.right = "0px";
-          //   }, 7);
-          //   document.body.appendChild(previewDrop);
-          // }
         } else {
           document.querySelector(".sf-content-page").style.marginRight =
             "initial";
@@ -316,14 +306,12 @@ export default {
 
         switch (caseDrop) {
           case "leftCase":
-            divResize.style.top = "initial";
-            divResize.style.bottom = "0";
-            divResize.style.left = "0";
-            divResize.style.height = "100%";
+            divResize.className +=
+              " sf-drop-dialog-content sf-drop-dialog-left";
             break;
           case "CancelLeftCase":
-            divResize.style.bottom = "initial";
-            divResize.style.height = "fit-content";
+            divResize.classList.remove("sf-drop-dialog");
+            divResize.classList.remove("sf-drop-dialog-left");
             break;
           case "rightCase":
             divResize.style.top = "initial";
@@ -417,10 +405,11 @@ export default {
     },
     // Shadow Input
     // Text Input
-    getTextCreated(valor) {
-      var newText = { texto: valor };
-      this.textObject.push(newText);
-    },
+    // getTextCreated(valor) {
+    //   console.log(valor);
+    //   var newText = { texto: valor };
+    //   this.textObject.push(newText);
+    // },
     insereTextCreated(valor) {
       this.$emit("callbackTextoInsereBloco", valor);
     },
@@ -429,6 +418,9 @@ export default {
     },
     removeTextCreated(valor) {
       this.$emit("callbackTextoRemoveBloco", valor);
+    },
+    fontProps(font) {
+      this.$emit("callbackFontProps", font);
     },
     // Text Input
   },

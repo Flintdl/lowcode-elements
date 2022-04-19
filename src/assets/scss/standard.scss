@@ -154,7 +154,7 @@ input[type="color"]::-webkit-color-swatch {
   width: clamp(150px, 50ch, 900px);
   height: fit-content;
   z-index: 998;
-  .sf-menu-content {
+  .sf-dialog-body {
     max-height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -162,6 +162,28 @@ input[type="color"]::-webkit-color-swatch {
   &.sf-minimized-dialog {
     overflow: hidden;
     height: 47px !important;
+  }
+  &.sf-drop-dialog,
+  &.sf-drop-dialog-content {
+    width: clamp(150px, 30rem, 900px) !important;
+    top: initial !important;
+    height: 100% !important;
+    bottom: 0 !important;
+    > .sf-dialog-body {
+      max-height: 100%;
+    }
+
+    &.sf-drop-dialog-left {
+      left: 0 !important;
+    }
+    &.sf-drop-dialog-right {
+      right: 0 !important;
+    }
+  }
+  &.sf-drop-dialog {
+    .sf-dialog-body {
+      padding-bottom: 4rem;
+    }
   }
 }
 
@@ -507,5 +529,71 @@ input[type="color"]::-webkit-color-swatch {
     opacity: 0;
     margin-top: -10px;
     pointer-events: none;
+  }
+
+  // Range Ticks
+
+  input[type="range"].input-range-tickes-bulk {
+    -webkit-appearance: none;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease-in-out;
+    overflow: hidden;
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      background: #f0f4fb;
+      width: 100%;
+      left: 3px;
+      border-radius: 1px;
+      height: 2px;
+      top: 5px;
+      z-index: 1;
+      box-shadow: 10px 0 0 #f0f4fb;
+    }
+
+    &:active.input-range-tickes-bulk:after,
+    &:hover.input-range-tickes-bulk:after {
+      content: "";
+      position: absolute;
+      background: rgb(190, 190, 190);
+      width: 2px;
+      left: 3px;
+      border-radius: 1px;
+      height: 6px;
+      top: 3px;
+      z-index: 1;
+      box-shadow: 10px 0 0 rgb(190 190 190), 20px 0 0 rgb(190 190 190),
+        30px 0 0 rgb(190 190 190), 40px 0 0 rgb(190 190 190),
+        50px 0 0 rgb(190 190 190), 60px 0 0 rgb(190 190 190),
+        70px 0 0 rgb(190 190 190), 80px 0 0 rgb(190 190 190),
+        90px 0 0 rgb(190 190 190), 100px 1px 0 rgb(235 235 235),
+        90px 1px 0 rgb(235 235 235), 120px 1px 0 rgb(255 255 255),
+        150px 1px 0 rgb(235 235 235), 180px 1px 0 rgb(235 235 235),
+        210px 1px 0 rgb(235 235 235), 240px 1px 0 rgb(235 235 235),
+        270px 1px 0 rgb(235 235 235);
+    }
+  }
+  input[type="range"].input-range-tickes-bulk::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 12px;
+    background-color: #fff;
+    color: #444;
+  }
+  input[type="range"].input-range-tickes-bulk::-webkit-slider-thumb {
+    width: 12px;
+    -webkit-appearance: none;
+
+    height: 12px;
+    cursor: pointer;
+    background: #1597ff;
+    border: 1px solid #1597ff;
+    border-radius: 40rem;
+    transition: box-shadow 0.2s ease-in-out;
+    position: relative;
+    z-index: 4;
+  }
+  input[type="range"].input-range-tickes-bulk:active::-webkit-slider-thumb {
+    background: #fff;
   }
 }
