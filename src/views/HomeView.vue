@@ -23,7 +23,8 @@
               </span>
             </div>
           </div>
-          <div
+          <TransitionGroup
+            name="bounce-grid"
             :style="gapProps"
             :class="[
               'sf-display-grid sf-flex-wrap sf-width-100',
@@ -42,7 +43,7 @@
               :cssDefinido="cssProps"
               class="sf-position-relative"
             />
-          </div>
+          </TransitionGroup>
         </div>
 
         <!-- <pre class="language-markup">
@@ -168,6 +169,23 @@ export default {
 </script>
 
 <style>
+.bounce-grid-enter-active {
+  animation: bounce-in 0.3s;
+}
+.bounce-grid-leave-active {
+  animation: bounce-in 0.2s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 #sf-grid-template:after {
   content: "";
   width: 100%;

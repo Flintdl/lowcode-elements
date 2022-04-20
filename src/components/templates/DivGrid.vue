@@ -15,19 +15,23 @@
       </p>
     </div>
     <!-- v-on:callbackTextoInsereBloco="insereTexto" -->
-    <component
-      :cardId="idBloco"
-      v-bind:is="component"
-      :idBloco="'component_' + idBloco"
-      v-on:callback="closeDialog"
-      v-on:callbackMinimized="minimizedDialog"
-      v-on:callbackTextoInsereBloco="insereTexto"
-      v-on:callbackTextoEditaBloco="editaTexto"
-      v-on:callbackTextoRemoveBloco="removeTexto"
-      v-on:callbackFontProps="fontProps"
-      v-on:callbackAc="getValorCampoAc"
-      :class="componentMinimized"
-    />
+    <Transition name="bounce">
+      <KeepAlive>
+        <component
+          :cardId="idBloco"
+          v-bind:is="component"
+          :idBloco="'component_' + idBloco"
+          v-on:callback="closeDialog"
+          v-on:callbackMinimized="minimizedDialog"
+          v-on:callbackTextoInsereBloco="insereTexto"
+          v-on:callbackTextoEditaBloco="editaTexto"
+          v-on:callbackTextoRemoveBloco="removeTexto"
+          v-on:callbackFontProps="fontProps"
+          v-on:callbackAc="getValorCampoAc"
+          :class="componentMinimized"
+        />
+      </KeepAlive>
+    </Transition>
     <div class="sf-tooltip-actions sf-position-absolute">
       <ul class="sf-row">
         <li class="sf-col-4 sf-text-center">
@@ -107,6 +111,8 @@ export default {
       fontFamilyData: this.fontFamilyData,
       valorfontSizeData: this.valorfontSizeData,
       estiloFontData: this.estiloFontData,
+      decorationFontData: this.decorationFontData,
+      transformFontData: this.transformFontData,
       fontPropsMargin: {
         marginLeft: null,
         marginTop: null,
@@ -189,6 +195,8 @@ export default {
     },
     fontProps(font) {
       this.estiloFontData = font.style;
+      this.decorationFontData = font.decoration;
+      this.transformFontData = font.transform;
       this.fontFamilyData = font.family;
       this.valorfontSizeData = font.size;
       this.fontPropsMargin.marginTop = font.fontMargin.marginTop + "px";
@@ -225,6 +233,8 @@ export default {
       console.log(marginProps);
       return {
         "font-style": this.estiloFontData,
+        "text-decoration": this.decorationFontData,
+        "text-transform": this.transformFontData,
         "font-family": this.fontFamilyData,
         "font-size": this.valorfontSizeData + "rem",
         margin: `${marginProps.marginTop} ${marginProps.marginRight} ${marginProps.marginBottom} ${marginProps.marginLeft}`,

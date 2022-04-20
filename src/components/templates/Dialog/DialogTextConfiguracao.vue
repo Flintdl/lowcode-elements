@@ -10,7 +10,7 @@
       <span
         class="sf-display-flex sf-align-items-center sf-justify-content-between sf-width-100 sf-font-weight-bold sf-text-md sf-text-white"
       >
-        Texto ID {{ idBlocoTexto }}
+        Configurações de Texto - Nº: {{ idBlocoTexto }}
         <div>
           <i
             @click="closeAction"
@@ -107,7 +107,7 @@
             </option>
           </select>
         </div>
-        <div class="sf-col-12">
+        <div class="sf-col-12 sf-mb-3">
           <span
             class="sf-mb-3 sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
           >
@@ -154,6 +154,7 @@
                   />
                 </div>
                 <div
+                  ref="sf-container-bulk__itens-preview"
                   class="sf-container-bulk__itens sf-py-3 sf-px-5 sf-border-radius sf-border-info sf-border-2 sf-text-center"
                 >
                   <i
@@ -198,6 +199,48 @@
             </div>
           </div>
         </div>
+        <div class="sf-col-12 sf-mb-3">
+          <label class="sf-label">Tipo de Fonte</label>
+          <div class="sf-display-flex">
+            <li
+              v-for="(texto, i) of fontDecoration"
+              v-bind:key="i"
+              class="sf-display-flex sf-cursor-pointer"
+              @click="onSelectDecoration(texto.value)"
+            >
+              <i
+                :class="
+                  'mdi mdi-' +
+                  texto.mdi +
+                  ' ' +
+                  texto.size +
+                  ' sf-text-info sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted'
+                "
+              ></i>
+            </li>
+          </div>
+        </div>
+        <div class="sf-col-12 sf-mb-3">
+          <label class="sf-label">Tipo de Fonte</label>
+          <div class="sf-display-flex">
+            <li
+              v-for="(texto, i) of fontTransform"
+              v-bind:key="i"
+              class="sf-display-flex sf-cursor-pointer"
+              @click="onSelectTransform($event, texto.value)"
+            >
+              <i
+                :class="
+                  'mdi mdi-' +
+                  texto.mdi +
+                  ' ' +
+                  texto.size +
+                  ' sf-text-info sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted'
+                "
+              ></i>
+            </li>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -213,7 +256,6 @@ export default {
       items: [
         { label: "Normal", value: "normal" },
         { label: "Italic", value: "italic" },
-        { label: "Oblique", value: "oblique" },
       ],
       fontFamily: [
         { label: "Nunito Sans", value: "'Nunito Sans', sans-serif" },
@@ -221,8 +263,47 @@ export default {
         { label: "Arial", value: "Arial, sans-serif" },
         { label: "Helvetica", value: "Helvetica, sans-serif" },
       ],
+      fontDecoration: [
+        { mdi: "format-clear", value: "initial", size: "sf-text-lg" },
+        { mdi: "format-underline", value: "underline", size: "sf-text-lg" },
+        { mdi: "format-overline", value: "overline", size: "sf-text-lg" },
+        {
+          mdi: "format-strikethrough-variant",
+          value: "line-through",
+          size: "sf-text-lg",
+        },
+        {
+          mdi: "format-letter-matches",
+          value: "underline overline",
+          size: "sf-text-lg",
+        },
+      ],
+      fontTransform: [
+        {
+          mdi: "format-clear",
+          value: "initial",
+          size: "sf-text-lg",
+        },
+        {
+          mdi: "format-size",
+          value: "capitalize",
+          size: "sf-text-lg",
+        },
+        {
+          mdi: "format-letter-case-upper",
+          value: "uppercase",
+          size: "sf-text-lg",
+        },
+        {
+          mdi: "format-letter-case-lower",
+          value: "lowercase",
+          size: "sf-text-lg",
+        },
+      ],
       fontProps: {
         style: "normal",
+        decoration: "initial",
+        transform: "initial",
         family: "'Nunito Sans', sans-serif",
         size: "1",
         fontMargin: {
@@ -239,9 +320,26 @@ export default {
     idBlocoTexto: String,
     textoDescrito: String,
   },
-
   methods: {
+    // :style="{
+    //                 'padding-top': fontProps.fontMargin.marginTop / 5 + 'px',
+    //                 'padding-right':
+    //                   fontProps.fontMargin.marginRight / 2 + 'px',
+    //                 'padding-left': fontProps.fontMargin.marginLeft / 2 + 'px',
+    //                 'padding-bottom':
+    //                   fontProps.fontMargin.marginBottom / 5 + 'px',
+    //               }"
     onSelectType() {
+      this.$emit("callbackProps", this.fontProps);
+    },
+    onSelectDecoration(decoration) {
+      this.fontProps.decoration = decoration;
+      this.$emit("callbackProps", this.fontProps);
+    },
+    onSelectTransform(e, transform) {
+      e.currentTarget.querySelector("i").classList.remove("sf-text-info");
+      e.currentTarget.querySelector("i").classList.add("sf-text-danger");
+      this.fontProps.transform = transform;
       this.$emit("callbackProps", this.fontProps);
     },
     moveDialog(e) {

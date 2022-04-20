@@ -1,14 +1,19 @@
 <template>
   <div>
-    <component
-      v-bind:is="componentText"
-      :idBlocoTexto="textoID"
-      :textoDescrito="textoDescricao"
-      :fontProps="fontProps"
-      v-on:callbackProps="fontProps"
-      v-on:callbackCloseDialog="closeDialog"
-      style="top: 5%; left: 25%"
-    />
+    <Transition name="bounce">
+      <KeepAlive>
+        <component
+          v-if="componentText"
+          v-bind:is="componentText"
+          :idBlocoTexto="textoID"
+          :textoDescrito="textoDescricao"
+          :fontProps="fontProps"
+          v-on:callbackProps="fontProps"
+          v-on:callbackCloseDialog="closeDialog"
+          style="top: 5%; left: 25%"
+        />
+      </KeepAlive>
+    </Transition>
     <p
       @blur="editarTexto"
       class="sf-m-0 sf-text-truncate sf-width-100"
@@ -73,6 +78,7 @@ export default {
       this.$emit("compartilhaTexto", event.currentTarget);
     },
     fontProps(font) {
+      console.log(font);
       this.$emit("callbackFontProps", font);
     },
     closeDialog: function (closeDialog) {
@@ -81,3 +87,23 @@ export default {
   },
 };
 </script>
+
+<style>
+.bounce-enter-active {
+  animation: bounce-in 0.4s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.3s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

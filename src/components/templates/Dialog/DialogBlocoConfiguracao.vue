@@ -45,38 +45,40 @@
       </div>
     </div>
 
-    <div
-      class="sf-menu-ul sf-menu-content open sf-pb-0"
-      :id="'container-collapse_' + cardId"
-      :ref="'container-collapse_' + cardId"
-    >
-      <div class="sf-row sf-px-4">
-        <BoxShadowBlocoLateral
-          :valorInput="shadowObject.shadowLateral"
-          v-on:callback="getShadowLateral"
-        />
-        <BoxShadowBlocoBottom
-          :valorInput="shadowObject.shadowBottom"
-          v-on:callback="getShadowBottom"
-        />
-        <BoxShadowBloco
-          :valorInput="shadowObject.shadowExpanse"
-          v-on:callback="getShadowExpanse"
-        />
-        <BoxShadowBlocoCor
-          :valorInput="shadowObject.shadowCor"
-          v-on:callback="getShadowCor"
-        />
+    <Transition name="bounce">
+      <div
+        class="sf-menu-ul sf-menu-content open sf-pb-0"
+        :id="'container-collapse_' + cardId"
+        :ref="'container-collapse_' + cardId"
+      >
+        <div class="sf-row sf-px-4">
+          <BoxShadowBlocoLateral
+            :valorInput="shadowObject.shadowLateral"
+            v-on:callback="getShadowLateral"
+          />
+          <BoxShadowBlocoBottom
+            :valorInput="shadowObject.shadowBottom"
+            v-on:callback="getShadowBottom"
+          />
+          <BoxShadowBloco
+            :valorInput="shadowObject.shadowExpanse"
+            v-on:callback="getShadowExpanse"
+          />
+          <BoxShadowBlocoCor
+            :valorInput="shadowObject.shadowCor"
+            v-on:callback="getShadowCor"
+          />
+        </div>
+        <div class="sf-dialog-footer sf-py-3 sf-px-4 sf-border-top">
+          <button
+            @click="resetShadow"
+            class="sf-btn sf-text-sm sf-px-3 sf-py-0 sf-btn-primary"
+          >
+            Resetar Shadow
+          </button>
+        </div>
       </div>
-      <div class="sf-dialog-footer sf-py-3 sf-px-4 sf-border-top">
-        <button
-          @click="resetShadow"
-          class="sf-btn sf-text-sm sf-px-3 sf-py-0 sf-btn-primary"
-        >
-          Resetar Shadow
-        </button>
-      </div>
-    </div>
+    </Transition>
     <div
       class="sf-menu-ul sf-menu-content sf-pb-0"
       :id="'template-collapse_' + cardId"

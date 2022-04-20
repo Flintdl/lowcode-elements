@@ -115,24 +115,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .sf-texto-customizacao {
   &:hover {
     border-color: #e7515a !important;
-  }
-}
-input:invalid {
-  animation: shake 300ms;
-}
-@keyframes shake {
-  25% {
-    transform: translate(4px);
-  }
-  50% {
-    transform: translate(-4px);
-  }
-  100% {
-    transform: translate(4px);
   }
 }
 </style>
