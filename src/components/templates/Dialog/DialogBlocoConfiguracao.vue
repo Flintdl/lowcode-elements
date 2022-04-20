@@ -14,6 +14,11 @@
         Bloco {{ cardId }}
         <div>
           <i
+            @click="dropAction"
+            class="mdi sf-mr-3 sf-text-lg sf-cursor-pointer sf-text-white sf-dropdown-action"
+            :class="iconVerifyDrop ? 'mdi-dock-right' : 'mdi-dock-window'"
+          ></i>
+          <i
             @click="minimizeAction"
             class="mdi sf-mr-3 sf-text-lg sf-cursor-pointer sf-text-white sf-dropdown-action"
             :class="iconVerify ? 'mdi-window-maximize' : 'mdi-window-minimize'"
@@ -92,6 +97,7 @@
           v-on:callbackTextoEditaBloco="editaTextCreated"
           v-on:callbackTextoRemoveBloco="removeTextCreated"
           v-on:callbackFontProps="fontProps"
+          :idBloco="idBloco"
         />
       </div>
     </div>
@@ -142,6 +148,7 @@ export default {
   data: function () {
     return {
       iconVerify: false,
+      iconVerifyDrop: false,
       tabsDialog: [
         {
           label: "Shadows",
@@ -209,64 +216,70 @@ export default {
           divResize.classList.remove("sf-drop-dialog-left");
         }
 
-        if (
-          divResize.computedStyleMap().get("left").value <=
-          document.body.offsetLeft - 50
-        ) {
-          if (!document.querySelector(".preview-Drop")) {
-            var previewDrop = document.createElement("div");
-            previewDrop.style.height = "100vh";
-            previewDrop.style.left = "-50px";
-            previewDrop.classList.add("preview-Drop");
-            previewDrop.style.borderRadius = "0px";
-            previewDrop.style.transition = "left .07s linear";
-            previewDrop.style.width = "50px";
-            previewDrop.style.bottom = "0";
-            previewDrop.style.backgroundColor = "#e9206399";
-            previewDrop.style.position = "fixed";
-            previewDrop.style.zIndex = "500";
-            setTimeout(() => {
-              previewDrop.style.left = "0px";
-            }, 7);
-            document.body.appendChild(previewDrop);
-          }
-        } else if (
-          divResize.computedStyleMap().get("left").value +
-            divResize.computedStyleMap().get("width").value >=
-          document.body.offsetLeft + document.body.offsetWidth - 50
-        ) {
-          document.querySelector(".sf-content-page").style.marginRight =
-            "30rem";
-          if (!document.querySelector(".preview-drop-dashed")) {
-            let div = document.createElement("div");
-            div.className =
-              "preview-drop-dashed sf-display-flex sf-align-items-center sf-justify-content-center";
-            div.style.width = "30rem";
-            div.style.height = "100vh";
-            div.style.border = "2px dashed salmon";
-            div.style.transition = "right .15s ease";
-            div.style.right = "-30rem";
-            div.style.position = "fixed";
-            div.style.top = "0";
-            div.innerText = "Solte o Elemento";
+        if (divResize.classList.contains("sf-drop-dialog-content-active")) {
+          if (
+            divResize.computedStyleMap().get("left").value <=
+            document.body.offsetLeft - 50
+          ) {
+            if (!document.querySelector(".preview-Drop")) {
+              var previewDrop = document.createElement("div");
+              previewDrop.style.height = "100vh";
+              previewDrop.style.left = "-50px";
+              previewDrop.classList.add("preview-Drop");
+              previewDrop.style.borderRadius = "0px";
+              previewDrop.style.transition = "left .07s linear";
+              previewDrop.style.width = "50px";
+              previewDrop.style.bottom = "0";
+              previewDrop.style.backgroundColor = "#e9206399";
+              previewDrop.style.position = "fixed";
+              previewDrop.style.zIndex = "500";
+              setTimeout(() => {
+                previewDrop.style.left = "0";
+              }, 7);
+              document.body.appendChild(previewDrop);
+            }
+          } else if (
+            divResize.computedStyleMap().get("left").value +
+              divResize.computedStyleMap().get("width").value >=
+            document.body.offsetLeft + document.body.offsetWidth - 50
+          ) {
+            document.querySelector(".sf-content-page").style.marginRight =
+              "30rem";
+            if (!document.querySelector(".preview-drop-dashed")) {
+              let div = document.createElement("div");
+              div.className =
+                "preview-drop-dashed sf-display-flex sf-align-items-center sf-justify-content-center";
+              div.style.width = "30rem";
+              div.style.height = "100vh";
+              div.style.border = "2px dashed salmon";
+              div.style.transition = "right .15s ease";
+              div.style.right = "-30rem";
+              div.style.position = "fixed";
+              div.style.top = "0";
+              div.innerText = "Solte o Elemento";
 
-            document
-              .querySelector(".sf-content-page")
-              .parentNode.insertBefore(
-                div,
-                document.querySelector(".sf-content-page").nextSibling
-              );
-            setTimeout(() => {
-              div.style.right = "0rem";
-            }, 7);
-          }
-        } else {
-          document.querySelector(".sf-content-page").style.marginRight =
-            "initial";
-          if (document.querySelector(".preview-drop-dashed")) {
-            document
-              .querySelector(".preview-drop-dashed")
-              .remove(document.querySelector(".preview-drop-dashed"));
+              document
+                .querySelector(".sf-content-page")
+                .parentNode.insertBefore(
+                  div,
+                  document.querySelector(".sf-content-page").nextSibling
+                );
+              setTimeout(() => {
+                div.style.right = "0rem";
+              }, 7);
+            }
+          } else {
+            document.querySelector(".sf-content-page").style.marginRight =
+              "initial";
+            if (document.querySelector(".preview-drop-dashed")) {
+              document
+                .querySelector(".preview-drop-dashed")
+                .remove(document.querySelector(".preview-drop-dashed"));
+            } else if (document.querySelector(".preview-Drop")) {
+              document
+                .querySelector(".preview-Drop")
+                .remove(document.querySelector(".preview-Drop"));
+            }
           }
         }
       }
@@ -278,34 +291,33 @@ export default {
         target.classList.add("sf-cursor-grab");
 
         var caseDrop;
-        if (
-          divResize.computedStyleMap().get("left").value <=
-          document.body.offsetLeft - 50
-        ) {
-          caseDrop = "leftCase";
-        } else if (
-          divResize.computedStyleMap().get("left").value +
-            divResize.computedStyleMap().get("width").value >=
-          document.body.offsetLeft + document.body.offsetWidth - 50
-        ) {
-          caseDrop = "rightCase";
-        } else if (
-          divResize.computedStyleMap().get("left").value >=
-          document.body.offsetLeft + document.body.offsetWidth / 2 - 50
-        ) {
-          divResize.computedStyleMap().get("left").value >=
-            document.body.offsetLeft - 50;
-          caseDrop = "CancelLeftCase";
-        } else if (
-          divResize.computedStyleMap().get("left").value +
-            divResize.computedStyleMap().get("width").value <=
-          document.body.offsetLeft + document.body.offsetWidth - 50
-        ) {
-          caseDrop = "CancelrightCase";
+        if (divResize.classList.contains("sf-drop-dialog-content-active")) {
+          if (
+            divResize.computedStyleMap().get("left").value <=
+            document.body.offsetLeft - 50
+          ) {
+            caseDrop = "leftCase";
+          } else if (
+            divResize.computedStyleMap().get("left").value +
+              divResize.computedStyleMap().get("width").value >=
+            document.body.offsetLeft + document.body.offsetWidth - 50
+          ) {
+            caseDrop = "rightCase";
+          } else if (
+            divResize.computedStyleMap().get("left").value >=
+            document.body.offsetLeft + document.body.offsetWidth / 2 - 50
+          ) {
+            divResize.computedStyleMap().get("left").value >=
+              document.body.offsetLeft - 50;
+            caseDrop = "CancelLeftCase";
+          } else if (
+            divResize.computedStyleMap().get("left").value +
+              divResize.computedStyleMap().get("width").value <=
+            document.body.offsetLeft + document.body.offsetWidth - 50
+          ) {
+            caseDrop = "CancelrightCase";
+          }
         }
-
-        console.log(caseDrop);
-
         switch (caseDrop) {
           case "leftCase":
             divResize.className +=
@@ -336,6 +348,17 @@ export default {
     closeAction() {
       this.$emit("callback", null);
       this.$emit("callbackMinimized", "");
+    },
+    dropAction(e) {
+      var elementPai =
+        e.currentTarget.parentElement.parentElement.parentElement.parentElement;
+      if (elementPai.classList.contains("sf-drop-dialog-content-active")) {
+        elementPai.classList.remove("sf-drop-dialog-content-active");
+        this.iconVerifyDrop = false;
+      } else {
+        elementPai.classList.add("sf-drop-dialog-content-active");
+        this.iconVerifyDrop = true;
+      }
     },
     minimizeAction(e) {
       var elementPai =

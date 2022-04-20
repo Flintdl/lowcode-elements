@@ -4,6 +4,8 @@
     <input
       type="number"
       value="1"
+      min="1"
+      max="30"
       id="inputQuantidade"
       v-model="valor"
       class="filter-states sf-text-capitalize"

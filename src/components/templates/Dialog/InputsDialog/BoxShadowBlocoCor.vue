@@ -2,33 +2,35 @@
   <div class="sf-col sf-form-group">
     <label class="sf-label">Cor do Shadow</label>
     <ul class="sf-colors-list sf-display-flex sf-mb-2 sf-align-items-center">
-      <li
-        v-for="(color, i) of colorsList"
-        v-bind:key="i"
-        class="sf-colors-itens sf-cursor-pointer sf-mr-2"
-      >
-        <span
-          :style="'background-color:' + color.hexadecimal"
-          :data-color="color.hexadecimal"
-          :title="'Hexadecimal: ' + color.hexadecimal"
-          @click="setValueColor"
-          :ref="color.id"
-          class="sf-colors-itens-input sf-display-block sf-p-3 sf-position-relative"
+      <TransitionGroup name="list-color" class="sf-display-flex">
+        <li
+          v-for="(color, i) of colorsList"
+          v-bind:key="i"
+          class="sf-colors-itens sf-cursor-pointer sf-mr-2"
         >
-          <label
-            class="sf-remove-color sf-position-absolute"
-            @click="removeColorArray"
+          <span
+            :style="'background-color:' + color.hexadecimal"
+            :data-color="color.hexadecimal"
+            :title="'Hexadecimal: ' + color.hexadecimal"
+            @click="setValueColor"
+            :ref="color.id"
+            class="sf-colors-itens-input sf-display-block sf-p-3 sf-position-relative"
           >
-            <i class="mdi mdi-close sf-text-sm sf-text-standard"></i>
-          </label>
-          <label
-            class="sf-edit-color sf-position-absolute"
-            @click="editColorArray"
-          >
-            <i class="mdi mdi-pencil sf-text-sm sf-text-standard"></i>
-          </label>
-        </span>
-      </li>
+            <label
+              class="sf-remove-color sf-position-absolute"
+              @click="removeColorArray"
+            >
+              <i class="mdi mdi-close sf-text-sm sf-text-standard"></i>
+            </label>
+            <label
+              class="sf-edit-color sf-position-absolute"
+              @click="editColorArray"
+            >
+              <i class="mdi mdi-pencil sf-text-sm sf-text-standard"></i>
+            </label>
+          </span>
+        </li>
+      </TransitionGroup>
       <li
         v-if="verifyButton"
         @click="insertColorArray"
@@ -223,6 +225,23 @@ export default {
         padding: 0.063rem 0.375rem !important;
       }
     }
+  }
+}
+.list-color-enter-active {
+  animation: bounce-in-list 0.3s;
+}
+.list-color-leave-active {
+  animation: bounce-in-list 0.2s reverse;
+}
+@keyframes bounce-in-list {
+  0% {
+    transform: scale(0.6);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

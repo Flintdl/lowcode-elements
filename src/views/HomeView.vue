@@ -170,14 +170,14 @@ export default {
 
 <style>
 .bounce-grid-enter-active {
-  animation: bounce-in 0.3s;
+  animation: bounce-in-grid 0.3s;
 }
 .bounce-grid-leave-active {
-  animation: bounce-in 0.2s reverse;
+  animation: bounce-in-grid 0.15s reverse;
 }
-@keyframes bounce-in {
+@keyframes bounce-in-grid {
   0% {
-    transform: scale(0);
+    transform: scale(0.5);
   }
   50% {
     transform: scale(1.05);

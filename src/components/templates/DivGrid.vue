@@ -8,8 +8,9 @@
       <p
         class="sf-text-white sf-text-center"
         v-for="(texto, i) of textObject"
+        style="margin: 0"
         v-bind:key="i"
-        :style="fontCss"
+        :ref="'Text_' + texto.id"
       >
         {{ texto.texto }}
       </p>
@@ -35,63 +36,13 @@
     <div class="sf-tooltip-actions sf-position-absolute">
       <ul class="sf-row">
         <li class="sf-col-4 sf-text-center">
-          <label :for="idBloco" class="sf-cursor-pointer">
-            <i
-              class="mdi mdi-image sf-text-lg sf-text-white sf-dropdown-action"
-            ></i>
-            <input
-              :id="idBloco"
-              :ref="'input' + idBloco"
-              type="file"
-              class="sf-display-none"
-              @change="showOptions($event, 'imagem')"
-            />
-          </label>
-        </li>
-        <li class="sf-col-4 sf-text-center">
           <i
-            @click="showOptions($event, 'text')"
-            class="mdi mdi-card-text sf-text-lg sf-text-white sf-dropdown-action"
-          ></i>
-        </li>
-        <li class="sf-col-4 sf-text-center">
-          <i
-            @click="showOptions($event, 'options')"
+            @click="showOptions"
             class="mdi mdi-cog sf-text-lg sf-text-white sf-dropdown-action"
           ></i>
         </li>
       </ul>
     </div>
-
-    <!-- <div
-      class="sf-height-position sf-position-absolute sf-display-flex sf-flex-column sf-px-2"
-    >
-      <i
-        class="mdi mdi-arrow-up sf-text-md sf-text-white sf-dropdown-action"
-      ></i>
-      <span class="sf-text-white sf-font-weight-extra-bold sf-text-center">
-        {{ altura }}
-        px
-      </span>
-      <i
-        class="mdi mdi-arrow-down sf-text-md sf-text-white sf-dropdown-action"
-      ></i>
-    </div> -->
-    <!-- <div
-      class="sf-width-position sf-width-100 sf-position-absolute sf-display-flex sf-align-items-center sf-px-2"
-    >
-      <i
-        class="mdi mdi-arrow-left sf-text-md sf-text-white sf-dropdown-action"
-      ></i>
-      <hr class="sf-width-100 sf-mr-2" />
-      <span class="sf-text-white sf-font-weight-extra-bold sf-text-center">
-        {{ larguraPixel }}px
-      </span>
-      <hr class="sf-width-100 sf-ml-2" />
-      <i
-        class="mdi mdi-arrow-right sf-text-md sf-text-white sf-dropdown-action"
-      ></i>
-    </div> -->
   </div>
 </template>
 
@@ -108,17 +59,6 @@ export default {
       shadowBottom: this.shadowBottom,
       shadowExpanse: this.shadowExpanse,
       shadowCor: this.shadowCor,
-      fontFamilyData: this.fontFamilyData,
-      valorfontSizeData: this.valorfontSizeData,
-      estiloFontData: this.estiloFontData,
-      decorationFontData: this.decorationFontData,
-      transformFontData: this.transformFontData,
-      fontPropsMargin: {
-        marginLeft: null,
-        marginTop: null,
-        marginRight: null,
-        marginBottom: null,
-      },
       textObject: [],
     };
   },
@@ -133,37 +73,23 @@ export default {
     DialogBlocoConfiguracao,
   },
   beforeMount() {
-    if (localStorage.getItem("textLabelBloco"))
-      this.textObject = JSON.parse(localStorage.getItem("textLabelBloco"));
+    if (localStorage.getItem("textLabelBloco")) {
+      var listaGet = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          var props = element.props;
+          props.forEach((element) => {
+            console.log(element);
+            this.textObject.push(element);
+          });
+        }
+      });
+    }
   },
   methods: {
-    showOptions: function (e, params) {
-      switch (params) {
-        case "imagem":
-          var filesSelected = e.currentTarget.files;
-          var backgroundDiv =
-            e.currentTarget.parentElement.parentElement.parentElement
-              .parentElement.parentElement;
-          if (filesSelected.length > 0) {
-            var fileToLoad = filesSelected[0];
-            var fileReader = new FileReader();
-            var srcData;
-            fileReader.onload = function (fileLoadedEvent) {
-              srcData = fileLoadedEvent.target.result; // <--- data: base64
-              var img = document.createElement("img");
-              img.src = srcData;
-              img.setAttribute("alt", "Imagem Teste");
-              img.style.width = "50%";
-              img.style.maxHeight = "90%";
-              backgroundDiv.appendChild(img);
-            };
-          }
-          fileReader.readAsDataURL(fileToLoad);
-          break;
-        case "options":
-          this.component = "DialogBlocoConfiguracao";
-          break;
-      }
+    showOptions: function () {
+      this.component = "DialogBlocoConfiguracao";
     },
     closeDialog: function (closeDialog) {
       this.component = closeDialog;
@@ -172,37 +98,77 @@ export default {
       this.componentMinimized = minimizedDialog;
     },
     removeTexto: function (removeTexto) {
-      this.textObject = this.textObject.filter(function (returnableObjects) {
-        return returnableObjects.id !== removeTexto.id;
+      var listaGet = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          element.props = element.props.filter(function (returnableObjects) {
+            return returnableObjects.id !== removeTexto.id;
+          });
+          if (element.props)
+            localStorage.setItem("textLabelBloco", JSON.stringify(listaGet));
+          this.textObject = element.props;
+        }
       });
-      localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
     },
     editaTexto: function (editaTexto) {
-      var objIndex = this.textObject.findIndex(
-        (obj) => obj.id == editaTexto.id
-      );
-      if (this.textObject[objIndex]) {
-        this.textObject[objIndex].texto = editaTexto.texto;
-        localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
-      }
+      var listaGet = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          var props = element.props;
+          console.log(props);
+          var objIndex = props.findIndex((obj) => obj.id == editaTexto.id);
+          if (props[objIndex]) {
+            props[objIndex].texto = editaTexto.texto;
+            localStorage.setItem("textLabelBloco", JSON.stringify(listaGet));
+          }
+          if (this.textObject[objIndex]) {
+            this.textObject[objIndex].texto = editaTexto.texto;
+          }
+        }
+      });
     },
     insereTexto: function (insereTexto) {
       var objIndex = this.textObject.find((obj) => obj.id === insereTexto.id);
       if (!objIndex) {
         this.textObject.push(insereTexto);
-        localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
+
+        var lista = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
+        var conteinerAtual = this.idBloco;
+        let achou = false;
+        lista.forEach((element) => {
+          if (element.container_id == conteinerAtual) {
+            element.props.push(insereTexto);
+            achou = true;
+          }
+        });
+
+        if (!achou) {
+          lista.push({
+            container_id: conteinerAtual,
+            props: [insereTexto],
+          });
+        }
+
+        localStorage.setItem("textLabelBloco", JSON.stringify(lista));
+
+        // localStorage.setItem("textLabelBloco", JSON.stringify(this.textObject));
       }
     },
     fontProps(font) {
-      this.estiloFontData = font.style;
-      this.decorationFontData = font.decoration;
-      this.transformFontData = font.transform;
-      this.fontFamilyData = font.family;
-      this.valorfontSizeData = font.size;
-      this.fontPropsMargin.marginTop = font.fontMargin.marginTop + "px";
-      this.fontPropsMargin.marginRight = font.fontMargin.marginRight + "px";
-      this.fontPropsMargin.marginBottom = font.fontMargin.marginBottom + "px";
-      this.fontPropsMargin.marginLeft = font.fontMargin.marginLeft + "px";
+      this.textObject.forEach((element) => {
+        if (font.id === String(element.id)) {
+          var elementFind = this.$refs["Text_" + element.id];
+          elementFind[0].style.cssText = `
+          font-style: ${font.style};
+          text-decoration: ${font.decoration};
+          text-transform: ${font.transform};
+          font-family: ${font.family};
+          font-size: ${font.size}rem;
+          margin: ${font.fontMargin.marginTop}px ${font.fontMargin.marginRight}px ${font.fontMargin.marginBottom}px ${font.fontMargin.marginLeft}px;`;
+        }
+      });
     },
     getValorCampoAc(valor) {
       this.shadowLateral = valor.shadowLateral;
@@ -210,34 +176,16 @@ export default {
       this.shadowExpanse = valor.shadowExpanse;
       this.shadowCor = valor.shadowCor;
     },
-    created() {
-      this.$watch("textObject", () => {
-        console.log("Alterou", this.textObject);
-        // this.textObject
-      });
-    },
   },
   computed: {
     styleComputed() {
       return {
         "background-color": this.background,
         "box-shadow": `
-          ${this.shadowLateral ? this.shadowLateral : "1"}px 
-          ${this.shadowBottom ? this.shadowBottom : "2"}px 
+          ${this.shadowLateral ? this.shadowLateral : "1"}px
+          ${this.shadowBottom ? this.shadowBottom : "2"}px
           ${this.shadowExpanse ? this.shadowExpanse : "11"}px 0
           ${this.shadowCor ? this.shadowCor : "rgba(0, 0, 0, .1)"} `,
-      };
-    },
-    fontCss() {
-      var marginProps = this.fontPropsMargin;
-      console.log(marginProps);
-      return {
-        "font-style": this.estiloFontData,
-        "text-decoration": this.decorationFontData,
-        "text-transform": this.transformFontData,
-        "font-family": this.fontFamilyData,
-        "font-size": this.valorfontSizeData + "rem",
-        margin: `${marginProps.marginTop} ${marginProps.marginRight} ${marginProps.marginBottom} ${marginProps.marginLeft}`,
       };
     },
   },

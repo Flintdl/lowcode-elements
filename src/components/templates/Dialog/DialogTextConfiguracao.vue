@@ -23,11 +23,7 @@
       <div class="sf-row sf-px-4 sf-py-3">
         <div class="sf-col-12 sf-form-group">
           <p
-            class="sf-my-2 sf-text-lg sf-position-relative sf-border-radius sf-px-3 sf-py-4 sf-bg-muted sf-text-center"
-            :style="{
-              'font-style': fontProps.style,
-              'font-family': fontProps.family,
-            }"
+            class="sf-my-2 sf-text-lg sf-position-relative sf-border-radius sf-px-3 sf-py-5 sf-bg-muted sf-text-center"
           >
             <label
               style="top: 0; left: 0.5rem"
@@ -35,7 +31,16 @@
             >
               <sub><i>Preview</i></sub>
             </label>
-            {{ textoDescrito }}
+            <span
+              :style="{
+                'font-style': fontProps.style,
+                'text-decoration': fontProps.decoration,
+                'text-transform': fontProps.transform,
+                'font-family': fontProps.family,
+              }"
+            >
+              {{ textoDescrito }}
+            </span>
           </p>
         </div>
         <div
@@ -69,26 +74,11 @@
         </div>
         <div class="sf-col-12 sf-mb-3">
           <span
-            class="sf-mb-3 sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+            class="sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
           >
             Configurações de Fonte
             <hr class="sf-width-100 sf-ml-4"
           /></span>
-          <label class="sf-label">Estilo de Fonte</label>
-          <select
-            v-model="fontProps.style"
-            @change="onSelectType"
-            class="sf-text-capitalize"
-          >
-            <option
-              v-bind:key="item.value"
-              :value="item.value"
-              :disabled="item.disable"
-              v-for="item of items"
-            >
-              {{ item.label }}
-            </option>
-          </select>
         </div>
         <div class="sf-col-12 sf-mb-3">
           <label class="sf-label">Tipo de Fonte</label>
@@ -106,6 +96,82 @@
               {{ item.label }}
             </option>
           </select>
+        </div>
+        <div class="sf-col-12 sf-mb-3">
+          <label class="sf-label">Decorar Fonte</label>
+          <div class="sf-display-flex">
+            <li
+              v-for="(texto, i) of fontDecoration"
+              v-bind:key="i"
+              class="sf-display-flex sf-cursor-pointer"
+              ref="decorationFocus"
+              :title="texto.value"
+              @click="onSelectDecoration($event, texto.value)"
+            >
+              <i
+                :class="
+                  'mdi mdi-' +
+                  texto.mdi +
+                  ' ' +
+                  texto.size +
+                  ' sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted ' +
+                  texto.initial
+                "
+              ></i>
+            </li>
+          </div>
+        </div>
+        <div class="sf-col sf-mb-3">
+          <label class="sf-label">Transformar Fonte</label>
+          <div class="sf-display-flex">
+            <li
+              v-for="(texto, i) of fontTransform"
+              v-bind:key="i"
+              class="sf-display-flex sf-cursor-pointer"
+              ref="transformFocus"
+              :title="texto.value"
+              @click="onSelectTransform($event, texto.value)"
+            >
+              <i
+                :class="
+                  'mdi mdi-' +
+                  texto.mdi +
+                  ' ' +
+                  texto.size +
+                  ' sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted ' +
+                  texto.initial
+                "
+              ></i>
+            </li>
+          </div>
+        </div>
+        <div class="sf-col-4 sf-mb-3">
+          <label class="sf-label sf-text-right sf-display-block"
+            >Estilo da Fonte</label
+          >
+          <div class="sf-display-flex sf-justify-content-end">
+            <li
+              v-for="(texto, i) of items"
+              v-bind:key="i"
+              class="sf-display-flex sf-cursor-pointer"
+              ref="styleFocus"
+              :title="texto.value"
+              @click="onSelectStyle($event, texto.value)"
+            >
+              <i
+                :class="
+                  'mdi mdi-' +
+                  texto.mdi +
+                  ' ' +
+                  texto.size +
+                  ' sf-px-3 sf-py-1 sf-border-radius sf-bg-muted ' +
+                  texto.margin +
+                  ' ' +
+                  texto.initial
+                "
+              ></i>
+            </li>
+          </div>
         </div>
         <div class="sf-col-12 sf-mb-3">
           <span
@@ -199,48 +265,6 @@
             </div>
           </div>
         </div>
-        <div class="sf-col-12 sf-mb-3">
-          <label class="sf-label">Tipo de Fonte</label>
-          <div class="sf-display-flex">
-            <li
-              v-for="(texto, i) of fontDecoration"
-              v-bind:key="i"
-              class="sf-display-flex sf-cursor-pointer"
-              @click="onSelectDecoration(texto.value)"
-            >
-              <i
-                :class="
-                  'mdi mdi-' +
-                  texto.mdi +
-                  ' ' +
-                  texto.size +
-                  ' sf-text-info sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted'
-                "
-              ></i>
-            </li>
-          </div>
-        </div>
-        <div class="sf-col-12 sf-mb-3">
-          <label class="sf-label">Tipo de Fonte</label>
-          <div class="sf-display-flex">
-            <li
-              v-for="(texto, i) of fontTransform"
-              v-bind:key="i"
-              class="sf-display-flex sf-cursor-pointer"
-              @click="onSelectTransform($event, texto.value)"
-            >
-              <i
-                :class="
-                  'mdi mdi-' +
-                  texto.mdi +
-                  ' ' +
-                  texto.size +
-                  ' sf-text-info sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted'
-                "
-              ></i>
-            </li>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -254,17 +278,40 @@ export default {
     return {
       iconVerify: false,
       items: [
-        { label: "Normal", value: "normal" },
-        { label: "Italic", value: "italic" },
+        {
+          mdi: "format-clear",
+          value: "normal",
+          size: "sf-text-lg",
+          margin: "sf-mr-2",
+          initial: "sf-text-info",
+        },
+        {
+          mdi: "format-italic",
+          value: "italic",
+          size: "sf-text-lg",
+        },
       ],
       fontFamily: [
         { label: "Nunito Sans", value: "'Nunito Sans', sans-serif" },
         { label: "Times New Roman", value: "'Times New Roman', Times, serif" },
         { label: "Arial", value: "Arial, sans-serif" },
+        { label: "Monospace", value: "monospace, sans-serif" },
         { label: "Helvetica", value: "Helvetica, sans-serif" },
+        { label: "Verdana", value: "'Verdana', sans-serif" },
+        { label: "Tahoma", value: "'Tahoma', sans-serif" },
+        { label: "Trebuchet", value: "'Trebuchet', sans-serif" },
+        { label: "Georgia", value: "'Georgia', serif" },
+        { label: "Garamond", value: "Garamond, serif" },
+        { label: "Courier New", value: "'Courier New', monospace" },
+        { label: "Brush Script MT", value: "'Brush Script MT', cursive" },
       ],
       fontDecoration: [
-        { mdi: "format-clear", value: "initial", size: "sf-text-lg" },
+        {
+          mdi: "format-clear",
+          value: "initial",
+          size: "sf-text-lg",
+          initial: "sf-text-info",
+        },
         { mdi: "format-underline", value: "underline", size: "sf-text-lg" },
         { mdi: "format-overline", value: "overline", size: "sf-text-lg" },
         {
@@ -283,6 +330,7 @@ export default {
           mdi: "format-clear",
           value: "initial",
           size: "sf-text-lg",
+          initial: "sf-text-info",
         },
         {
           mdi: "format-size",
@@ -301,6 +349,7 @@ export default {
         },
       ],
       fontProps: {
+        id: this.idBlocoTexto,
         style: "normal",
         decoration: "initial",
         transform: "initial",
@@ -321,24 +370,42 @@ export default {
     textoDescrito: String,
   },
   methods: {
-    // :style="{
-    //                 'padding-top': fontProps.fontMargin.marginTop / 5 + 'px',
-    //                 'padding-right':
-    //                   fontProps.fontMargin.marginRight / 2 + 'px',
-    //                 'padding-left': fontProps.fontMargin.marginLeft / 2 + 'px',
-    //                 'padding-bottom':
-    //                   fontProps.fontMargin.marginBottom / 5 + 'px',
-    //               }"
     onSelectType() {
       this.$emit("callbackProps", this.fontProps);
     },
-    onSelectDecoration(decoration) {
+    onSelectDecoration(e, decoration) {
+      var refsGet = this.$refs.decorationFocus;
+      for (let index = 0; index < refsGet.length; index++) {
+        const element = refsGet[index];
+        if (element.querySelector("i").classList.contains("sf-text-info"))
+          element.querySelector("i").classList.remove("sf-text-info");
+      }
+      e.currentTarget.querySelector("i").classList.add("sf-text-info");
+
       this.fontProps.decoration = decoration;
       this.$emit("callbackProps", this.fontProps);
     },
+    onSelectStyle(e, style) {
+      var refsGet = this.$refs.styleFocus;
+      for (let index = 0; index < refsGet.length; index++) {
+        const element = refsGet[index];
+        if (element.querySelector("i").classList.contains("sf-text-info"))
+          element.querySelector("i").classList.remove("sf-text-info");
+      }
+      e.currentTarget.querySelector("i").classList.add("sf-text-info");
+
+      this.fontProps.style = style;
+      this.$emit("callbackProps", this.fontProps);
+    },
     onSelectTransform(e, transform) {
-      e.currentTarget.querySelector("i").classList.remove("sf-text-info");
-      e.currentTarget.querySelector("i").classList.add("sf-text-danger");
+      var refsGet = this.$refs.transformFocus;
+      for (let index = 0; index < refsGet.length; index++) {
+        const element = refsGet[index];
+        if (element.querySelector("i").classList.contains("sf-text-info"))
+          element.querySelector("i").classList.remove("sf-text-info");
+      }
+      e.currentTarget.querySelector("i").classList.add("sf-text-info");
+
       this.fontProps.transform = transform;
       this.$emit("callbackProps", this.fontProps);
     },

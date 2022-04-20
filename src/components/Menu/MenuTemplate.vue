@@ -208,7 +208,7 @@ export default {
       inputQuantidade: (this.inputQuantidade = "1"),
       inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
       inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "50"),
+      inputRange: (this.inputRange = "100"),
       valorHeight: (this.valorHeight = "125"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),

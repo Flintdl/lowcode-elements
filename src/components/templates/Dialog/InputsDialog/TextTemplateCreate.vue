@@ -24,8 +24,8 @@
         <input
           type="text"
           ref="novoTexto"
-          class="sf-text-capitalize"
           @keyup.enter="insertTexto"
+          :minlength="invalid && 5"
           placeholder="Novo Texto"
         />
       </div>
@@ -49,6 +49,7 @@ export default {
   data: function () {
     return {
       textLabel: [],
+      invalid: false,
     };
   },
   props: {
@@ -56,30 +57,87 @@ export default {
     componentTextID: null,
     textoDescrito: null,
     valorInput: Array,
+    idBloco: String,
   },
   components: {
     TextoCustomizacao,
   },
   beforeMount() {
     if (localStorage.getItem("textLabel")) {
-      this.textLabel = JSON.parse(localStorage.getItem("textLabel"));
+      var listaGet = JSON.parse(localStorage.getItem("textLabel")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          var props = element.props;
+          props.forEach((element) => {
+            console.log(element);
+            this.textLabel.push(element);
+          });
+        }
+      });
     }
   },
   methods: {
     insertTexto() {
-      var date = new Date().getTime();
-      var novoTexto = { id: date, texto: this.$refs.novoTexto.value };
-      this.textLabel.push(novoTexto);
-      this.$refs.novoTexto.value = "";
-      this.$refs.novoTexto.focus();
-      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
+      if (this.$refs.novoTexto.value.length >= 5) {
+        if (this.$refs.novoTexto.classList.contains("sf-border-danger"))
+          this.$refs.novoTexto.classList.remove("sf-border-danger");
+        this.invalid = false;
+
+        var date = new Date().getTime();
+        var novoTexto = { id: date, texto: this.$refs.novoTexto.value };
+
+        this.textLabel.push(novoTexto);
+        this.$refs.novoTexto.value = "";
+        this.$refs.novoTexto.focus();
+
+        var lista = JSON.parse(localStorage.getItem("textLabel")) || [];
+
+        var conteinerAtual = this.idBloco;
+
+        let achou = false;
+        lista.forEach((element) => {
+          if (element.container_id == conteinerAtual) {
+            element.props.push(novoTexto);
+            achou = true;
+          }
+        });
+
+        if (!achou) {
+          lista.push({
+            container_id: conteinerAtual,
+            props: [novoTexto],
+          });
+        }
+
+        localStorage.setItem("textLabel", JSON.stringify(lista));
+      } else {
+        this.invalid = true;
+        this.$refs.novoTexto.classList.add("sf-border-danger");
+        setTimeout(() => {
+          this.invalid = false;
+        }, 200);
+      }
     },
     editarTexto(target) {
-      var objIndex = this.textLabel.findIndex(
-        (obj) => obj.id == target.parentElement.id
-      );
-      this.textLabel[objIndex].texto = target.innerText;
-      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
+      var listaGet = JSON.parse(localStorage.getItem("textLabel")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          var props = element.props;
+          console.log(props);
+          var objIndex = props.findIndex(
+            (obj) => obj.id == target.parentElement.id
+          );
+          if (props[objIndex]) {
+            props[objIndex].texto = target.innerText;
+            localStorage.setItem("textLabel", JSON.stringify(listaGet));
+          }
+          if (this.textLabel[objIndex]) {
+            this.textLabel[objIndex].texto = target.innerText;
+          }
+        }
+      });
       var editaTexto = {
         id: target.parentElement.id,
         texto: target.innerText,
@@ -87,24 +145,40 @@ export default {
       this.$emit("callbackTextoEditaBloco", editaTexto);
     },
     removeTexto(target) {
-      console.log(target);
-      this.textLabel = this.textLabel.filter(function (returnableObjects) {
-        return (
-          returnableObjects.id !=
-          target.parentElement.parentElement.getAttribute("id")
-        );
+      var listaGet = JSON.parse(localStorage.getItem("textLabel")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          element.props = element.props.filter(function (returnableObjects) {
+            return (
+              returnableObjects.id !=
+              target.parentElement.parentElement.getAttribute("id")
+            );
+          });
+          if (element.props)
+            localStorage.setItem("textLabel", JSON.stringify(listaGet));
+          console.log(element.props);
+          this.textLabel = element.props;
+        }
       });
-      localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
+
+      // this.textLabel = this.textLabel.filter(function (returnableObjects) {
+      //   return (
+      //     returnableObjects.id !=
+      //     target.parentElement.parentElement.getAttribute("id")
+      //   );
+      // });
+      // localStorage.setItem("textLabel", JSON.stringify(this.textLabel));
       var removeTexto = {
         id: target.parentElement.parentElement.getAttribute("id"),
         texto: target.parentElement.parentElement.innerText,
       };
       this.$emit("callbackTextoRemoveBloco", removeTexto);
     },
-    compartilhaTexto(target) {
+    compartilhaTexto(element) {
       var novoTexto = {
-        id: target.parentElement.parentElement.getAttribute("id"),
-        texto: target.parentElement.parentElement.innerText,
+        id: element.id,
+        texto: element.texto,
       };
       this.$emit("callbackTextoInsere", novoTexto);
     },
@@ -119,6 +193,20 @@ export default {
 .sf-texto-customizacao {
   &:hover {
     border-color: #e7515a !important;
+  }
+}
+input:invalid {
+  animation: shake 300ms;
+}
+@keyframes shake {
+  25% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  100% {
+    transform: translateX(4px);
   }
 }
 </style>

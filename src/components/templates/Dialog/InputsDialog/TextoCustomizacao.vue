@@ -17,6 +17,7 @@
     <p
       @blur="editarTexto"
       class="sf-m-0 sf-text-truncate sf-width-100"
+      ref="text-label-edit"
       contenteditable="true"
     >
       {{ textoDescricao }}
@@ -74,11 +75,14 @@ export default {
     removeTexto(event) {
       this.$emit("callbackRemover", event.currentTarget);
     },
-    compartilhaTexto(event) {
-      this.$emit("compartilhaTexto", event.currentTarget);
+    compartilhaTexto(e) {
+      var compartilhaTexto = {
+        id: e.currentTarget.parentElement.parentElement.id,
+        texto: this.$refs["text-label-edit"].innerText,
+      };
+      this.$emit("compartilhaTexto", compartilhaTexto);
     },
     fontProps(font) {
-      console.log(font);
       this.$emit("callbackFontProps", font);
     },
     closeDialog: function (closeDialog) {
@@ -90,14 +94,14 @@ export default {
 
 <style>
 .bounce-enter-active {
-  animation: bounce-in 0.4s;
+  animation: bounce-in 0.3s;
 }
 .bounce-leave-active {
-  animation: bounce-in 0.3s reverse;
+  animation: bounce-in 0.2s reverse;
 }
 @keyframes bounce-in {
   0% {
-    transform: scale(0);
+    transform: scale(0.6);
   }
   50% {
     transform: scale(1.05);
