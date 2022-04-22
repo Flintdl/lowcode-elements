@@ -7,6 +7,7 @@
         class="sf-texto-customizacao sf-display-flex sf-align-items-center sf-justify-content-between sf-text-preview sf-border-2 sf-border-radius sf-border-dashed sf-px-3 sf-py-2 sf-form-group"
         v-for="(texto, i) of textLabel"
         :textoDescricao="texto.texto"
+        :textoTag="texto.tag"
         :textoID="String(texto.id)"
         v-on:callbackEditar="editarTexto"
         v-on:callbackRemover="removeTexto"
@@ -20,6 +21,28 @@
     <hr class="sf-mb-4" />
     <!-- v-model="valor" -->
     <div class="sf-row">
+      <div class="sf-col-12 sf-mb-3">
+        <label class="sf-label">Tipo de Texto</label>
+        <ul class="sf-display-flex">
+          <li
+            v-for="(texto, i) of typeOfTag"
+            v-bind:key="i"
+            class="sf-display-flex sf-cursor-pointer"
+            ref="decorationTypeOfTag"
+            :title="texto.value"
+            @click="onSelectTypeOfTag($event, texto.value)"
+          >
+            <i
+              :class="
+                'mdi mdi-' +
+                texto.mdi +
+                ' sf-px-3 sf-py-1 sf-border-radius sf-mr-2 sf-bg-muted sf-text-lg ' +
+                texto.initial
+              "
+            ></i>
+          </li>
+        </ul>
+      </div>
       <div class="sf-col">
         <input
           type="text"
@@ -48,6 +71,32 @@ import TextoCustomizacao from "@/components/templates/Dialog/InputsDialog/TextoC
 export default {
   data: function () {
     return {
+      typeOfTag: [
+        {
+          mdi: "format-header-1",
+          value: "h1",
+          initial: "sf-text-info",
+        },
+        { mdi: "format-header-2", value: "h2" },
+        { mdi: "format-header-3", value: "h3" },
+        {
+          mdi: "format-header-4",
+          value: "h4",
+        },
+        {
+          mdi: "format-header-5",
+          value: "h5",
+        },
+        {
+          mdi: "format-header-6",
+          value: "h6",
+        },
+        {
+          mdi: "format-paragraph",
+          value: "p",
+        },
+      ],
+      typeOfTagData: null,
       textLabel: [],
       invalid: false,
     };
@@ -85,7 +134,11 @@ export default {
         this.invalid = false;
 
         var date = new Date().getTime();
-        var novoTexto = { id: date, texto: this.$refs.novoTexto.value };
+        var novoTexto = {
+          id: date,
+          texto: this.$refs.novoTexto.value,
+          tag: this.typeOfTagData,
+        };
 
         this.textLabel.push(novoTexto);
         this.$refs.novoTexto.value = "";
@@ -176,11 +229,31 @@ export default {
       this.$emit("callbackTextoRemoveBloco", removeTexto);
     },
     compartilhaTexto(element) {
+      var typeTag;
+      this.textLabel.forEach((element) => {
+        if (element.texto === element.texto) {
+          typeTag = element.tag;
+        }
+      });
       var novoTexto = {
         id: element.id,
         texto: element.texto,
+        tag: typeTag,
       };
+      console.log(novoTexto);
       this.$emit("callbackTextoInsere", novoTexto);
+    },
+    onSelectTypeOfTag(e, typeoftag) {
+      var refsGet = this.$refs.decorationTypeOfTag;
+      for (let index = 0; index < refsGet.length; index++) {
+        const element = refsGet[index];
+        if (element.querySelector("i").classList.contains("sf-text-info"))
+          element.querySelector("i").classList.remove("sf-text-info");
+      }
+      e.currentTarget.querySelector("i").classList.add("sf-text-info");
+
+      this.typeOfTagData = typeoftag;
+      this.$emit("callbackProps", this.fontProps);
     },
     fontProps(font) {
       this.$emit("callbackFontProps", font);

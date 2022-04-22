@@ -5,15 +5,16 @@
     :ref="idBloco"
   >
     <div v-if="textObject.length">
-      <p
+      <component
         class="sf-text-white sf-text-center"
         v-for="(texto, i) of textObject"
         style="margin: 0"
+        :is="texto.tag"
         v-bind:key="i"
         :ref="'Text_' + texto.id"
       >
         {{ texto.texto }}
-      </p>
+      </component>
     </div>
     <!-- v-on:callbackTextoInsereBloco="insereTexto" -->
     <Transition name="bounce">
@@ -133,6 +134,8 @@ export default {
       var objIndex = this.textObject.find((obj) => obj.id === insereTexto.id);
       if (!objIndex) {
         this.textObject.push(insereTexto);
+        console.log(insereTexto);
+        console.log(this.textObject);
 
         var lista = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
         var conteinerAtual = this.idBloco;

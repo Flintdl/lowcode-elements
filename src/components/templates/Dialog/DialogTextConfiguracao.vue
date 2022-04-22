@@ -99,7 +99,7 @@
         </div>
         <div class="sf-col-12 sf-mb-3">
           <label class="sf-label">Decorar Fonte</label>
-          <div class="sf-display-flex">
+          <ul class="sf-display-flex">
             <li
               v-for="(texto, i) of fontDecoration"
               v-bind:key="i"
@@ -119,11 +119,11 @@
                 "
               ></i>
             </li>
-          </div>
+          </ul>
         </div>
         <div class="sf-col sf-mb-3">
           <label class="sf-label">Transformar Fonte</label>
-          <div class="sf-display-flex">
+          <ul class="sf-display-flex">
             <li
               v-for="(texto, i) of fontTransform"
               v-bind:key="i"
@@ -143,13 +143,13 @@
                 "
               ></i>
             </li>
-          </div>
+          </ul>
         </div>
         <div class="sf-col-4 sf-mb-3">
           <label class="sf-label sf-text-right sf-display-block"
             >Estilo da Fonte</label
           >
-          <div class="sf-display-flex sf-justify-content-end">
+          <ul class="sf-display-flex sf-justify-content-end">
             <li
               v-for="(texto, i) of items"
               v-bind:key="i"
@@ -171,7 +171,7 @@
                 "
               ></i>
             </li>
-          </div>
+          </ul>
         </div>
         <div class="sf-col-12 sf-mb-3">
           <span

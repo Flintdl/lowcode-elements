@@ -246,6 +246,17 @@ export default {
   },
 
   beforeMount() {
+    if (localStorage.getItem("quantidadeItens")) {
+      var quantidadeItem = JSON.parse(localStorage.getItem("quantidadeItens"));
+      this.inputQuantidade = quantidadeItem;
+    }
+    if (localStorage.getItem("quantidadeLinhas")) {
+      var quantidadeLinha = JSON.parse(
+        localStorage.getItem("quantidadeLinhas")
+      );
+      this.inputQuantidadeLinha = quantidadeLinha;
+    }
+
     if (window.innerWidth >= 768) {
       if (localStorage.getItem("menu") === "fechado") {
         document.body.classList.add("menu-fechado");
@@ -349,9 +360,11 @@ export default {
     },
     getValorCampoQuantidade(valor) {
       this.inputQuantidade = valor;
+      localStorage.setItem("quantidadeItens", JSON.stringify(valor));
     },
     getValorCampoQuantidadeLinha(valor) {
       this.inputQuantidadeLinha = valor;
+      localStorage.setItem("quantidadeLinhas", JSON.stringify(valor));
     },
     getValorLarguraBloco(valor) {
       this.inputRange = valor;

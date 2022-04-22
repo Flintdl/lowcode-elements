@@ -54,6 +54,7 @@ export default {
   },
   props: {
     textoDescricao: String,
+    textoTag: String,
     valorObject: String,
     textoID: String,
     textLabel: Object,
