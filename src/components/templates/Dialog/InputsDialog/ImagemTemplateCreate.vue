@@ -1,54 +1,53 @@
 <template>
-  <div class="sf-col-12 sf-form-group">
-    <label class="sf-label"> Inserir Imagem </label>
-    <div v-if="imagemData">
-      <!-- <TextoCustomizacao
-        class="sf-texto-customizacao sf-display-flex sf-align-items-center sf-justify-content-between sf-text-preview sf-border-2 sf-border-radius sf-border-dashed sf-px-3 sf-py-2 sf-form-group"
-        v-for="(texto, i) of textLabel"
-        :textoDescricao="texto.texto"
-        :textoTag="texto.tag"
-        :textoID="String(texto.id)"
-        v-on:callbackEditar="editarTexto"
-        v-on:callbackRemover="removeTexto"
-        v-on:compartilhaTexto="compartilhaTexto"
-        v-on:callbackFontProps="fontProps"
-        :componentText="componentText"
-        :id="texto.id"
-        v-bind:key="i"
-      /> -->
-      <img
-        v-bind:key="i"
-        :src="imagem.dataBase"
-        v-for="(imagem, i) of imagemData"
-      />
+  <div class="sf-col-12">
+    <div v-if="imagemData.length">
+      <div class="sf-row">
+        <ImagemCustomizacao
+          v-bind:key="i"
+          v-for="(imagem, i) of imagemData"
+          class="sf-col-4 sf-display-flex"
+          :srcImagem="imagem.dataBase"
+          :idImagem="String(imagem.id)"
+          v-on:callbackRemover="removeImagem"
+          :idImageModal="String(imagem.id)"
+        />
+        <div class="sf-col-4 sf-display-flex">
+          <label
+            :for="'nova-imagem' + idBloco"
+            class="sf-display-flex sf-flex-column sf-justify-content-center sf-bg-muted sf-border sf-border-radius sf-px-3 sf-py-2 sf-form-group sf-overflow-hidden sf-text-center sf-text-muted sf-width-100 sf-cursor-pointer"
+            style="height: 74px"
+          >
+            <i class="mdi mdi-image-plus sf-text-lg sf-dropdown-action"></i>
+          </label>
+        </div>
+      </div>
     </div>
-    <hr class="sf-mb-4" v-if="imagemData.length" />
+    <div v-if="!imagemData.length">
+      <div class="sf-row">
+        <div class="sf-col-3 sf-display-flex">
+          <label
+            :for="'nova-imagem' + idBloco"
+            class="sf-display-flex sf-flex-column sf-justify-content-center sf-bg-muted sf-border sf-border-radius sf-px-3 sf-py-2 sf-form-group sf-overflow-hidden sf-text-center sf-text-muted sf-width-100 sf-cursor-pointer"
+            style="height: 74px"
+          >
+            <i class="mdi mdi-image-plus sf-text-lg sf-dropdown-action"></i>
+          </label>
+        </div>
+      </div>
+    </div>
+    <hr class="sf-mb-4" v-if="imagemData.length && invalid" />
     <!-- v-model="valor" -->
     <div class="sf-row">
       <div class="sf-col sf-display-flex">
         <input
           type="file"
           ref="novaImagem"
-          id="nova-imagem"
+          :id="'nova-imagem' + idBloco"
           class="sf-display-none"
           @change="imagemConvert"
         />
-        <label
-          for="nova-imagem"
-          class="sf-border-radius sf-border sf-width-100 sf-p-2 sf-text-truncate"
-          >{{ imagemDataTemp ? imagemDataTemp : "Insira uma imagem" }}</label
-        >
       </div>
-      <div class="sf-col-auto sf-display-flex sf-justify-content-right">
-        <button
-          ref="botaoInsere"
-          class="sf-btn sf-btn-primary sf-ml-auto"
-          @click="insertTexto"
-        >
-          Adicionar
-        </button>
-      </div>
-      <div class="sf-col-12 sf-mt-3" v-if="imagemDataTemp">
+      <div class="sf-col-12 sf-form-group" :style="!invalid && 'display: none'">
         <div class="sf-display-flex sf-p-2 sf-border-2 sf-border-radius">
           <img
             width="100%"
@@ -58,12 +57,31 @@
           />
         </div>
       </div>
+      <div
+        class="sf-col-12 sf-display-flex sf-justify-content-end sf-form-group"
+        v-if="invalid"
+      >
+        <button
+          ref="botaoInsere"
+          class="sf-btn sf-btn-outline-danger sf-mr-3"
+          @click="removeInsert"
+        >
+          Remover
+        </button>
+        <button
+          ref="botaoInsere"
+          class="sf-btn sf-btn-primary"
+          @click="insertImagem"
+        >
+          Adicionar
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// import TextoCustomizacao from "@/components/templates/Dialog/InputsDialog/TextoCustomizacao.vue";
+import ImagemCustomizacao from "@/components/templates/Dialog/InputsDialog/ImagemCustomizacao.vue";
 
 export default {
   data: function () {
@@ -82,36 +100,58 @@ export default {
     idBloco: String,
   },
   components: {
-    // TextoCustomizacao,
+    ImagemCustomizacao,
+  },
+  beforeMount() {
+    if (localStorage.getItem("imagemData")) {
+      var listaGet = JSON.parse(localStorage.getItem("imagemData")) || [];
+      var conteinerAtual = this.idBloco;
+      listaGet.forEach((element) => {
+        if (element.container_id == conteinerAtual) {
+          var imagem = element.imagemData;
+          if (imagem)
+            imagem.forEach((element) => {
+              this.imagemData.push(element);
+            });
+        }
+      });
+    }
   },
   methods: {
     imagemConvert(e) {
+      this.invalid = true;
       var filesSelected = e.currentTarget.files;
       if (filesSelected.length > 0) {
         var fileToLoad = filesSelected[0];
         this.imagemDataTemp = fileToLoad.name;
         var fileReader = new FileReader();
-        var imagemPreview;
+        var imagemPreview = this.$refs.imagemPreview;
         fileReader.addEventListener("load", function (fileLoadedEvent) {
-          imagemPreview = fileLoadedEvent.target.result;
+          imagemPreview.setAttribute("src", fileLoadedEvent.target.result);
         });
-        this.$refs.imagemPreview.src = imagemPreview;
       }
       fileReader.readAsDataURL(fileToLoad);
     },
-    insertTexto() {
+    removeInsert() {
+      this.$refs.novaImagem.value = "";
+      this.$refs.imagemPreview.removeAttribute("src");
+      this.imagemDataTemp = null;
+      this.invalid = false;
+    },
+    insertImagem() {
       var date = new Date().getTime();
       var novaImagem = {
         id: date,
-        dataBase: this.$refs.imagemPreview.src,
+        dataBase: this.$refs.imagemPreview.getAttribute("src"),
       };
-      console.log(this.$refs.imagemPreview.src);
 
       this.imagemData.push(novaImagem);
       this.$refs.novaImagem.value = "";
-      this.$refs.novaImagem.focus();
+      this.$refs.imagemPreview.removeAttribute("src");
+      this.imagemDataTemp = null;
+      this.invalid = false;
 
-      var lista = JSON.parse(localStorage.getItem("textLabel")) || [];
+      var lista = JSON.parse(localStorage.getItem("imagemData")) || [];
 
       var conteinerAtual = this.idBloco;
 
@@ -130,53 +170,31 @@ export default {
         });
       }
 
-      localStorage.setItem("textLabel", JSON.stringify(lista));
+      localStorage.setItem("imagemData", JSON.stringify(lista));
     },
-    editarTexto(target) {
-      var listaGet = JSON.parse(localStorage.getItem("textLabel")) || [];
+    removeImagem(target) {
+      var listaGet = JSON.parse(localStorage.getItem("imagemData")) || [];
       var conteinerAtual = this.idBloco;
       listaGet.forEach((element) => {
         if (element.container_id == conteinerAtual) {
-          var props = element.props;
-          var objIndex = props.findIndex(
-            (obj) => obj.id == target.parentElement.id
-          );
-          if (props[objIndex]) {
-            props[objIndex].texto = target.innerText;
-            localStorage.setItem("textLabel", JSON.stringify(listaGet));
-          }
-          if (this.textLabel[objIndex]) {
-            this.textLabel[objIndex].texto = target.innerText;
-          }
-        }
-      });
-      var editaTexto = {
-        id: target.parentElement.id,
-        texto: target.innerText,
-      };
-      this.$emit("callbackTextoEditaBloco", editaTexto);
-    },
-    removeTexto(target) {
-      var listaGet = JSON.parse(localStorage.getItem("textLabel")) || [];
-      var conteinerAtual = this.idBloco;
-      listaGet.forEach((element) => {
-        if (element.container_id == conteinerAtual) {
-          element.props = element.props.filter(function (returnableObjects) {
+          element.imagemData = element.imagemData.filter(function (
+            returnableObjects
+          ) {
             return (
-              returnableObjects.id !=
+              String(returnableObjects.id) !=
               target.parentElement.parentElement.getAttribute("id")
             );
           });
-          if (element.props)
-            localStorage.setItem("textLabel", JSON.stringify(listaGet));
-          this.textLabel = element.props;
+          if (element.imagemData)
+            localStorage.setItem("imagemData", JSON.stringify(listaGet));
+          this.imagemData = element.imagemData;
         }
       });
-      var removeTexto = {
-        id: target.parentElement.parentElement.getAttribute("id"),
-        texto: target.parentElement.parentElement.innerText,
-      };
-      this.$emit("callbackTextoRemoveBloco", removeTexto);
+      // var removeTexto = {
+      //   id: target.parentElement.parentElement.getAttribute("id"),
+      //   texto: target.parentElement.parentElement.innerText,
+      // };
+      // this.$emit("callbackTextoRemoveBloco", removeTexto);
     },
     compartilhaTexto(elementCompartilha) {
       var typeTag;
@@ -191,9 +209,6 @@ export default {
         tag: typeTag,
       };
       this.$emit("callbackTextoInsere", novoTexto);
-    },
-    fontProps(font) {
-      this.$emit("callbackFontProps", font);
     },
   },
 };

@@ -140,9 +140,10 @@ export default {
       listaGet.forEach((element) => {
         if (element.container_id == conteinerAtual) {
           var props = element.props;
-          props.forEach((element) => {
-            this.textLabel.push(element);
-          });
+          if (props)
+            props.forEach((element) => {
+              this.textLabel.push(element);
+            });
         }
       });
     }
@@ -173,7 +174,7 @@ export default {
         lista.forEach((element) => {
           if (element.container_id == conteinerAtual) {
             if (!element.props) {
-              lista.push({
+              element.push({
                 props: [novoTexto],
               });
             } else {

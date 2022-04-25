@@ -469,11 +469,19 @@ export default {
 }
 .sf-menu-content {
   display: none !important;
+  max-height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
   &.open {
     display: block !important;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     height: 100%;
+  }
+}
+.sf-drop-dialog-content-active {
+  .sf-menu-content {
+    max-height: calc(100% - 87px) !important;
   }
 }
 </style>
