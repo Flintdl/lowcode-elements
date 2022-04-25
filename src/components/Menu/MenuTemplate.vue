@@ -212,7 +212,7 @@ export default {
       valorHeight: (this.valorHeight = "125"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#434e5d"),
+      inputColor: (this.inputColor = "#0F1923"),
       inputBorder: (this.inputBorder = "0"),
       inputBorderColor: (this.inputBorderColor = ""),
       inputBorderTipo: (this.inputBorderTipo = "empty"),
@@ -396,7 +396,6 @@ export default {
   },
   created() {
     this.$watch("this.$refs.sfBackgroundResize", () => {
-      console.log(this.divResizeWidth);
       this.divResizeWidth = document.defaultView.getComputedStyle(
         this.$refs.sfBackgroundResize
       ).width;

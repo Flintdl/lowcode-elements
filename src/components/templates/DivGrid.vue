@@ -81,7 +81,6 @@ export default {
         if (element.container_id == conteinerAtual) {
           var props = element.props;
           props.forEach((element) => {
-            console.log(element);
             this.textObject.push(element);
           });
         }
@@ -118,7 +117,6 @@ export default {
       listaGet.forEach((element) => {
         if (element.container_id == conteinerAtual) {
           var props = element.props;
-          console.log(props);
           var objIndex = props.findIndex((obj) => obj.id == editaTexto.id);
           if (props[objIndex]) {
             props[objIndex].texto = editaTexto.texto;
@@ -134,8 +132,6 @@ export default {
       var objIndex = this.textObject.find((obj) => obj.id === insereTexto.id);
       if (!objIndex) {
         this.textObject.push(insereTexto);
-        console.log(insereTexto);
-        console.log(this.textObject);
 
         var lista = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
         var conteinerAtual = this.idBloco;

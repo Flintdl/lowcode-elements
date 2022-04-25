@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sf-position-relative">
     <Transition name="bounce">
       <KeepAlive>
         <component
@@ -14,6 +14,14 @@
         />
       </KeepAlive>
     </Transition>
+    <div
+      class="sf-text-muted sf-position-absolute sf-bg-white sf-border-radius"
+      style="left: 1rem; top: -0.9rem"
+    >
+      <span class="sf-font-weight-extra-bold sf-text-info sf-text-uppercase">
+        {{ textoTag }}
+      </span>
+    </div>
     <p
       @blur="editarTexto"
       class="sf-m-0 sf-text-truncate sf-width-100"

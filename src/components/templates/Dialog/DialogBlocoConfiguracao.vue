@@ -106,7 +106,9 @@
       :id="'border-collapse_' + cardId"
       :ref="'border-collapse_' + cardId"
     >
-      Arroz3
+      <div class="sf-row sf-px-4">
+        <ImagemTemplateCreate :idBloco="idBloco" />
+      </div>
     </div>
     <div
       class="sf-menu-ul sf-menu-content sf-pb-0"
@@ -130,6 +132,8 @@ import BoxShadowBloco from "@/components/templates/Dialog/InputsDialog/BoxShadow
 import BoxShadowBlocoCor from "@/components/templates/Dialog/InputsDialog/BoxShadowBlocoCor.vue";
 // Text
 import TextTemplateCreate from "@/components/templates/Dialog/InputsDialog/TextTemplateCreate.vue";
+// Imagem
+import ImagemTemplateCreate from "@/components/templates/Dialog/InputsDialog/ImagemTemplateCreate.vue";
 
 export default {
   props: {
@@ -144,6 +148,8 @@ export default {
     BoxShadowBlocoCor,
     // Text
     TextTemplateCreate,
+    // Imagem
+    ImagemTemplateCreate,
   },
   data: function () {
     return {
@@ -167,13 +173,6 @@ export default {
       },
       // textObject: [],
     };
-  },
-  mounted() {
-    // console.log(this.idBloco);
-    // console.log(this.$refs[this.idBloco]);
-    // console.log(this.$refs[this.idBloco].parentElement);
-    // var linha = document.createElement("span");
-    // linha;
   },
   methods: {
     zIndexDialog(e) {
@@ -428,13 +427,6 @@ export default {
       this.shadowObject.shadowCor = "#000000";
       this.$emit("callbackAc", this.shadowObject);
     },
-    // Shadow Input
-    // Text Input
-    // getTextCreated(valor) {
-    //   console.log(valor);
-    //   var newText = { texto: valor };
-    //   this.textObject.push(newText);
-    // },
     insereTextCreated(valor) {
       this.$emit("callbackTextoInsereBloco", valor);
     },

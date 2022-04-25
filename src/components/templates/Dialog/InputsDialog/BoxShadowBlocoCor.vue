@@ -113,16 +113,9 @@ export default {
             date = new Date().getTime();
             novaCor = { id: date, hexadecimal: this.$refs.novaCor.value };
             this.colorsList.push(novaCor);
-          } else {
-            console.log(
-              "Essa cor já existe como preset: ",
-              objIndex.hexadecimal
-            );
           }
         }
         localStorage.setItem("coresPreset", JSON.stringify(this.colorsList));
-      } else {
-        console.log("Máximo de cor: ", this.colorsList.length);
       }
     },
     editColorArray(e) {
