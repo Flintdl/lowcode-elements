@@ -13,14 +13,14 @@
                 'sf-justify-content-' + checkValue,
               ]"
             >
-              <span
+              <!-- <span
                 v-bind:key="linha"
                 :style="widthProps1"
                 class="sf-display-block sf-position-relative"
                 v-for="linha of 8"
               >
                 <div :style="widthProps" class="sf-position-absolute"></div>
-              </span>
+              </span> -->
             </div>
           </div>
           <TransitionGroup
@@ -39,6 +39,7 @@
               :tamanho="String(valor)"
               :altura="String(valorHeight)"
               :idBloco="'container_' + n"
+              :idGrid="'container_' + n"
               :background="inputColor"
               :cssDefinido="cssProps"
               class="sf-position-relative"

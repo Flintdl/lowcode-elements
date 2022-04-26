@@ -49,10 +49,33 @@
         </div>
       </div>
     </div>
-
+    <div
+      class="sf-menu-ul sf-menu-content open sf-pb-0"
+      :id="'template-collapse_' + cardId"
+      :ref="'template-collapse_' + cardId"
+    >
+      <ul class="sf-row sf-px-4">
+        <li
+          class="sf-col-12 sf-border-radius sf-bg-muted sf-p-2 sf-form-group sf-text-center"
+          v-for="(item, i) of itemGrid"
+          v-bind:key="i + item.order"
+        >
+          <span class="sf-font-weight-bold sf-text-info sf-mr-3">
+            <span class="sf-font-weight-extra-bold sf-text-default">
+              Elemento: &lt;{{ item.component }}/>
+            </span>
+          </span>
+          <span class="sf-font-weight-bold sf-text-info">
+            <span class="sf-font-weight-extra-bold sf-text-default">
+              Order: {{ item.order }}
+            </span>
+          </span>
+        </li>
+      </ul>
+    </div>
     <Transition name="bounce">
       <div
-        class="sf-menu-ul sf-menu-content open sf-pb-0"
+        class="sf-menu-ul sf-menu-content sf-pb-0"
         :id="'container-collapse_' + cardId"
         :ref="'container-collapse_' + cardId"
       >
@@ -86,8 +109,8 @@
     </Transition>
     <div
       class="sf-menu-ul sf-menu-content sf-pb-0"
-      :id="'template-collapse_' + cardId"
-      :ref="'template-collapse_' + cardId"
+      :id="'texto-collapse_' + cardId"
+      :ref="'texto-collapse_' + cardId"
     >
       <div class="sf-row sf-px-4">
         <!-- :valorInput="textObject.texto"
@@ -107,17 +130,14 @@
       :ref="'border-collapse_' + cardId"
     >
       <div class="sf-row sf-px-4">
-        <ImagemTemplateCreate :idBloco="idBloco" />
+        <ImagemTemplateCreate
+          v-on:callbackCompartilhaImagem="compartilhaImagem"
+          v-on:callbackRemoveImagem="removeImagem"
+          v-on:callbackPropsImage="propsImageEmit"
+          :idBloco="idBloco"
+        />
       </div>
     </div>
-    <div
-      class="sf-menu-ul sf-menu-content sf-pb-0"
-      :id="'position-collapse_' + cardId"
-      :ref="'position-collapse_' + cardId"
-    >
-      Arroz 4
-    </div>
-
     <!-- <svg id="svg">
       <line ref="line" id="line" />
     </svg> -->
@@ -153,17 +173,21 @@ export default {
   },
   data: function () {
     return {
-      iconVerify: false,
       iconVerifyDrop: false,
+      iconVerify: false,
+      itemGrid: [],
       tabsDialog: [
+        {
+          label: "Template",
+          ref: `template-collapse_${this.cardId}`,
+          container: "initial",
+        },
         {
           label: "Shadows",
           ref: `container-collapse_${this.cardId}`,
-          container: "initial",
         },
-        { label: "Textos", ref: `template-collapse_${this.cardId}` },
+        { label: "Textos", ref: `texto-collapse_${this.cardId}` },
         { label: "Imagens", ref: `border-collapse_${this.cardId}` },
-        { label: "Efeitos", ref: `position-collapse_${this.cardId}` },
       ],
       shadowObject: {
         shadowLateral: (this.shadowLateral = "0"),
@@ -173,6 +197,26 @@ export default {
       },
       // textObject: [],
     };
+  },
+  beforeMount() {
+    var orderStyle = 0;
+    var capetaID = document.querySelectorAll("[idGrid]");
+    for (let i = 0; i < capetaID.length; i++) {
+      const element = capetaID[i];
+      if ("component_" + element.getAttribute("idGrid") == this.idBloco) {
+        var capeta = element.querySelectorAll("[data-bind-grid]");
+        for (let i = 0; i < capeta.length; i++) {
+          const element = capeta[i];
+          element.style.order = orderStyle++;
+
+          var order = {
+            component: element.querySelector("[data-bind-grid-tag]").tagName,
+            order: orderStyle,
+          };
+          this.itemGrid.push(order);
+        }
+      }
+    }
   },
   methods: {
     zIndexDialog(e) {
@@ -440,6 +484,16 @@ export default {
       this.$emit("callbackFontProps", font);
     },
     // Text Input
+    // Imagem
+    compartilhaImagem(valor) {
+      this.$emit("callbackCompartilhaImagem", valor);
+    },
+    removeImagem(valor) {
+      this.$emit("callbackRemoveImagem", valor);
+    },
+    propsImageEmit(imagemProps) {
+      this.$emit("callbackPropsImage", imagemProps);
+    },
   },
 };
 </script>

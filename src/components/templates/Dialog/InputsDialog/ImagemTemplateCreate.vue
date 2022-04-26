@@ -1,40 +1,56 @@
 <template>
   <div class="sf-col-12">
+    <div class="sf-row">
+      <div class="sf-col sf-display-flex sf-mb-3" v-if="imagemData.length">
+        <i
+          @click="colGridSelect = 'sf-col-6'"
+          :class="[
+            colGridSelect === 'sf-col-6' && 'sf-text-info ',
+            ' mdi mdi-view-module sf-mr-3 sf-cursor-pointer sf-text-xl sf-px-2 sf-bg-muted sf-border-radius',
+          ]"
+        ></i>
+        <i
+          @click="colGridSelect = 'sf-col-12'"
+          :class="[
+            colGridSelect === 'sf-col-12' && 'sf-text-info ',
+            ' mdi mdi-view-list sf-cursor-pointer sf-text-xl sf-px-2 sf-bg-muted sf-border-radius',
+          ]"
+        ></i>
+      </div>
+      <div
+        :class="[
+          !imagemData.length && 'sf-ml-auto',
+          'sf-col-auto sf-display-flex sf-mb-3',
+        ]"
+      >
+        <label
+          :for="'nova-imagem' + idBloco"
+          class="sf-display-flex sf-align-items-center sf-bg-muted sf-border sf-border-radius sf-px-2 sf-overflow-hidden sf-text-center sf-text-muted sf-width-100 sf-cursor-pointer"
+        >
+          <i
+            class="mdi mdi-image-plus sf-text-lg sf-mr-3 sf-dropdown-action"
+          ></i>
+          Nova imagem
+        </label>
+      </div>
+    </div>
     <div v-if="imagemData.length">
       <div class="sf-row">
         <ImagemCustomizacao
           v-bind:key="i"
           v-for="(imagem, i) of imagemData"
-          class="sf-col-4 sf-display-flex"
+          :class="colGridSelect + ' sf-display-flex'"
           :srcImagem="imagem.dataBase"
           :idImagem="String(imagem.id)"
-          v-on:callbackRemover="removeImagem"
+          v-on:callbackRemoveImagem="removeImagem"
+          v-on:callbackPropsImage="propsImageEmit"
+          v-on:callbackCompartilhaImagem="compartilhaImagem"
           :idImageModal="String(imagem.id)"
+          :tituloImagem="imagem.titulo"
         />
-        <div class="sf-col-4 sf-display-flex">
-          <label
-            :for="'nova-imagem' + idBloco"
-            class="sf-display-flex sf-flex-column sf-justify-content-center sf-bg-muted sf-border sf-border-radius sf-px-3 sf-py-2 sf-form-group sf-overflow-hidden sf-text-center sf-text-muted sf-width-100 sf-cursor-pointer"
-            style="height: 74px"
-          >
-            <i class="mdi mdi-image-plus sf-text-lg sf-dropdown-action"></i>
-          </label>
-        </div>
       </div>
     </div>
-    <div v-if="!imagemData.length">
-      <div class="sf-row">
-        <div class="sf-col-3 sf-display-flex">
-          <label
-            :for="'nova-imagem' + idBloco"
-            class="sf-display-flex sf-flex-column sf-justify-content-center sf-bg-muted sf-border sf-border-radius sf-px-3 sf-py-2 sf-form-group sf-overflow-hidden sf-text-center sf-text-muted sf-width-100 sf-cursor-pointer"
-            style="height: 74px"
-          >
-            <i class="mdi mdi-image-plus sf-text-lg sf-dropdown-action"></i>
-          </label>
-        </div>
-      </div>
-    </div>
+
     <hr class="sf-mb-4" v-if="imagemData.length && invalid" />
     <!-- v-model="valor" -->
     <div class="sf-row">
@@ -48,6 +64,27 @@
         />
       </div>
       <div class="sf-col-12 sf-form-group" :style="!invalid && 'display: none'">
+        <div class="sf-row">
+          <div class="sf-col-12 sf-mb-3">
+            <label for="tituloInput" class="sf-label">Titulo da Imagem</label>
+            <input
+              ref="tituloInput"
+              id="tituloInput"
+              type="text"
+              placeholder="Ex. Logo da Empresa X"
+            />
+            <span
+              class="sf-display-flex sf-align-items-center sf-text-white sf-bg-danger sf-p-2 sf-border-radius sf-mt-2"
+              v-if="mensagemError"
+            >
+              <i
+                class="mdi mdi-alert-circle sf-text-lg sf-mr-3 sf-text-white sf-dropdown-action"
+              ></i>
+
+              {{ mensagemError }}
+            </span>
+          </div>
+        </div>
         <div class="sf-display-flex sf-p-2 sf-border-2 sf-border-radius">
           <img
             width="100%"
@@ -90,6 +127,8 @@ export default {
       imagemDataTemp: null,
       imagemDataBase: null,
       invalid: false,
+      colGridSelect: "sf-col-6",
+      mensagemError: null,
     };
   },
   props: {
@@ -139,38 +178,45 @@ export default {
       this.invalid = false;
     },
     insertImagem() {
-      var date = new Date().getTime();
-      var novaImagem = {
-        id: date,
-        dataBase: this.$refs.imagemPreview.getAttribute("src"),
-      };
+      if (this.$refs.tituloInput.value.trim().length >= 5) {
+        this.mensagemError = null;
+        var date = new Date().getTime();
+        var novaImagem = {
+          id: date,
+          titulo: this.$refs.tituloInput.value,
+          dataBase: this.$refs.imagemPreview.getAttribute("src"),
+        };
 
-      this.imagemData.push(novaImagem);
-      this.$refs.novaImagem.value = "";
-      this.$refs.imagemPreview.removeAttribute("src");
-      this.imagemDataTemp = null;
-      this.invalid = false;
+        this.imagemData.push(novaImagem);
+        this.$refs.novaImagem.value = "";
+        this.$refs.tituloInput.value = "";
+        this.$refs.imagemPreview.removeAttribute("src");
+        this.imagemDataTemp = null;
+        this.invalid = false;
 
-      var lista = JSON.parse(localStorage.getItem("imagemData")) || [];
+        var lista = JSON.parse(localStorage.getItem("imagemData")) || [];
 
-      var conteinerAtual = this.idBloco;
+        var conteinerAtual = this.idBloco;
 
-      let achou = false;
-      lista.forEach((element) => {
-        if (element.container_id == conteinerAtual) {
-          element.imagemData.push(novaImagem);
-          achou = true;
-        }
-      });
-
-      if (!achou) {
-        lista.push({
-          container_id: conteinerAtual,
-          imagemData: [novaImagem],
+        let achou = false;
+        lista.forEach((element) => {
+          if (element.container_id == conteinerAtual) {
+            element.imagemData.push(novaImagem);
+            achou = true;
+          }
         });
-      }
 
-      localStorage.setItem("imagemData", JSON.stringify(lista));
+        if (!achou) {
+          lista.push({
+            container_id: conteinerAtual,
+            imagemData: [novaImagem],
+          });
+        }
+
+        localStorage.setItem("imagemData", JSON.stringify(lista));
+      } else {
+        this.mensagemError = "Digite pelo menos 5 caracteres";
+      }
     },
     removeImagem(target) {
       var listaGet = JSON.parse(localStorage.getItem("imagemData")) || [];
@@ -190,36 +236,22 @@ export default {
           this.imagemData = element.imagemData;
         }
       });
-      // var removeTexto = {
-      //   id: target.parentElement.parentElement.getAttribute("id"),
-      //   texto: target.parentElement.parentElement.innerText,
-      // };
-      // this.$emit("callbackTextoRemoveBloco", removeTexto);
-    },
-    compartilhaTexto(elementCompartilha) {
-      var typeTag;
-      this.textLabel.forEach((element) => {
-        if (elementCompartilha.id === String(element.id)) {
-          typeTag = element.tag;
-        }
-      });
-      var novoTexto = {
-        id: elementCompartilha.id,
-        texto: elementCompartilha.texto,
-        tag: typeTag,
+      var removeImagem = {
+        id: target.parentElement.parentElement.getAttribute("id"),
       };
-      this.$emit("callbackTextoInsere", novoTexto);
+      this.$emit("callbackRemoveImagem", removeImagem);
+    },
+    compartilhaImagem(elementCompartilha) {
+      this.$emit("callbackCompartilhaImagem", elementCompartilha);
+    },
+    propsImageEmit(imagemProps) {
+      this.$emit("callbackPropsImage", imagemProps);
     },
   },
 };
 </script>
 
 <style lang="scss">
-.sf-texto-customizacao {
-  &:hover {
-    border-color: #e7515a !important;
-  }
-}
 input:invalid {
   animation: shake 300ms;
 }
