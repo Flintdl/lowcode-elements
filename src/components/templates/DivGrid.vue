@@ -28,11 +28,11 @@
         v-for="(imagem, i) of imagemObject"
       >
         <img
-          class="sf-text-white sf-text-center"
+          class="sf-display-block"
           data-bind-grid-tag
           :src="imagem.dataBase"
           :title="imagem.titulo"
-          width="50%"
+          width="100%"
           :ref="'Img_' + imagem.id"
         />
       </div>
@@ -255,10 +255,25 @@ export default {
       this.imagemObject.forEach((element) => {
         if (imagem.id === String(element.id)) {
           var elementFind = this.$refs["Img_" + element.id];
-          console.log(imagem.styles.borderRadius);
           elementFind[0].style.cssText = `
           border-radius: ${imagem.styles.borderRadius}px;
+          width: ${imagem.styles.width}%;
+          height: ${
+            imagem.styles.height > 0 ? imagem.styles.height : "fit-content"
+          }px;
           `;
+          if (imagem.styles.margin.auto === false) {
+            elementFind[0].style.cssText += `
+              margin: ${imagem.styles.margin.marginTop}px 
+              ${imagem.styles.margin.marginRight}px 
+              ${imagem.styles.margin.marginBottom}px 
+              ${imagem.styles.margin.marginLeft}px;
+          `;
+          } else {
+            elementFind[0].style.cssText += `
+              margin: ${imagem.styles.margin.marginTop}px auto ${imagem.styles.margin.marginBottom}px;
+          `;
+          }
         }
       });
     },

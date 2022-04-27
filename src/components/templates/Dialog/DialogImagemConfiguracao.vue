@@ -129,6 +129,112 @@
             </div>
           </div>
         </div>
+        <div class="sf-col-12 sf-mb-3">
+          <span
+            class="sf-mb-3 sf-text-nowrap sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
+          >
+            Espaçamento Imagem
+            <hr class="sf-width-100 sf-ml-4"
+          /></span>
+          <div class="sf-row">
+            <div class="sf-col-12">
+              <label class="sf-label">Margin Automatica</label>
+            </div>
+            <div class="sf-col-12 sf-display-flex sf-mb-3">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  :checked="imagemProps.styles.margin.auto"
+                  v-model="imagemProps.styles.margin.auto"
+                  @change="onSelectProps"
+                />
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="sf-col-12">
+              <div
+                class="sf-container-bulk sf-display-grid sf-px-2 sf-py-4 sf-border-bulk sf-border-2 sf-border-radius"
+              >
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="imagemProps.styles.margin.marginTop + 'px'"
+                    @input="onSelectProps"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectProps"
+                    class="input-range-tickes-bulk"
+                    v-model="imagemProps.styles.margin.marginTop"
+                  />
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="imagemProps.styles.margin.marginRight + 'px'"
+                    @input="onSelectProps"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectProps"
+                    class="input-range-tickes-bulk"
+                    v-model="imagemProps.styles.margin.marginRight"
+                  />
+                </div>
+                <div
+                  ref="sf-container-bulk__itens-preview"
+                  class="sf-container-bulk__itens sf-py-3 sf-px-5 sf-border-radius sf-border-info sf-border-2 sf-text-center"
+                >
+                  <i
+                    class="mdi mdi-link-variant sf-text-info sf-text-xl sf-text-white sf-dropdown-action"
+                  ></i>
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="imagemProps.styles.margin.marginBottom + 'px'"
+                    @input="onSelectProps"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectProps"
+                    class="input-range-tickes-bulk"
+                    v-model="imagemProps.styles.margin.marginBottom"
+                  />
+                </div>
+                <div class="sf-container-bulk__itens sf-p-2">
+                  <input
+                    min="0"
+                    max="100"
+                    type="text"
+                    disabled="true"
+                    :value="imagemProps.styles.margin.marginLeft + 'px'"
+                    @input="onSelectProps"
+                    class="sf-text-center sf-text-md sf-mb-1 sf-font-weight-bold"
+                  />
+                  <input
+                    type="range"
+                    @input="onSelectProps"
+                    class="input-range-tickes-bulk"
+                    v-model="imagemProps.styles.margin.marginLeft"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -146,7 +252,14 @@ export default {
         styles: {
           borderRadius: "0",
           width: "100",
-          height: "200",
+          height: "0",
+          margin: {
+            auto: true,
+            marginTop: "0",
+            marginRight: "0",
+            marginBottom: "0",
+            marginLeft: "0",
+          },
         },
         // fontMargin: {
         //   marginTop: "0",
@@ -170,6 +283,9 @@ export default {
         "border-radius": this.imagemProps.styles.borderRadius + "px",
       };
     },
+  },
+  mounted() {
+    this.$emit("callbackPropsImage", this.imagemProps);
   },
   methods: {
     onSelectProps() {
@@ -286,6 +402,65 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e7515a;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #00b751;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #00b751;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 .sf-container-bulk {
   .sf-container-bulk__itens {
     input {
