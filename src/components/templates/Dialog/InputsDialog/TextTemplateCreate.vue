@@ -290,23 +290,23 @@ export default {
 </script>
 
 <style lang="scss">
-.sf-texto-customizacao {
-  &:hover {
-    border-color: #e7515a !important;
-  }
-}
-input:invalid {
-  animation: shake 300ms;
-}
-@keyframes shake {
-  25% {
-    transform: translateX(4px);
-  }
-  50% {
-    transform: translateX(-4px);
-  }
-  100% {
-    transform: translateX(4px);
-  }
-}
+// .sf-texto-customizacao {
+//   &:hover {
+//     border-color: #e7515a !important;
+//   }
+// }
+// input:invalid {
+//   animation: shake 300ms;
+// }
+// @keyframes shake {
+//   25% {
+//     transform: translateX(4px);
+//   }
+//   50% {
+//     transform: translateX(-4px);
+//   }
+//   100% {
+//     transform: translateX(4px);
+//   }
+// }
 </style>

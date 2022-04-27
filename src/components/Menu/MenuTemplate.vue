@@ -87,57 +87,6 @@
                 :valorInput="inputQuantidadeLinha"
                 v-on:callback="getValorCampoQuantidadeLinha"
               />
-              <InputLarguraBloco
-                :valorInput="inputRange"
-                v-on:callback="getValorLarguraBloco"
-              />
-              <InputAlturaBloco
-                :valorInput="valorHeight"
-                v-on:callback="getValorAlturaBloco"
-              />
-            </div>
-            <div class="sf-row">
-              <div class="sf-col-4 sf-form-group">
-                <label class="sf-label">Cor</label>
-                <input
-                  type="color"
-                  id="inputColor"
-                  v-model="inputColor"
-                  class="sf-p-1 sf-text-capitalize"
-                  placeholder="Quantidade de Blocos"
-                />
-              </div>
-            </div>
-          </li>
-        </ul>
-        <!-- BORDA DOS BLOCOS -->
-        <ul class="sf-menu-ul sf-menu-content" ref="border-collapse">
-          <li class="sf-menu-li sf-px-4">
-            <div class="sf-row">
-              <div class="sf-col-12 sf-form-group">
-                <span
-                  class="sf-text-md sf-font-weight-bold sf-text-muted sf-display-flex sf-align-items-center"
-                >
-                  Bordas
-                  <hr class="sf-width-100 sf-ml-4" />
-                </span>
-              </div>
-              <InputBorderRadiusBloco
-                :valorInput="inputBorderRadius"
-                v-on:callback="getValorRadiusBloco"
-              />
-              <InputBorderBloco
-                :valorInput="inputBorder"
-                v-on:callback="getValorBorderBloco"
-              />
-              <InputBorderCorBloco
-                :valorInput="inputBorderColor"
-                v-on:callback="getValorBorderCorBloco"
-              />
-              <InputBorderTipoBloco
-                :valorInput="inputBorderTipo"
-                v-on:callback="getValorBorderTipoBloco"
-              />
             </div>
           </li>
         </ul>
@@ -158,26 +107,15 @@
         class="sf-background-resize sf-mx-auto resizable"
         :style="containerCss"
       >
-        <span class="sf-text-center sf-display-block sf-color-info">
-          Width: {{ divResizeWidth }} Pixels
-        </span>
-
         <div class="resizer" @mousedown="resizeDiv">
           <i class="mdi mdi-menu-left sf-position-absolute sf-text-lg"></i>
           <i class="mdi mdi-menu-right sf-position-absolute sf-text-lg"></i>
         </div>
         <HomeView
-          :valor="inputRange"
           :inputGap="inputGap"
-          :valorHeight="valorHeight"
           :quantidade="parseInt(inputQuantidade)"
           :quantidadeLinha="parseInt(inputQuantidadeLinha)"
-          :inputBorderRadius="inputBorderRadius"
           :checkValue="checkValue"
-          :inputColor="inputColor"
-          :inputBorder="inputBorder"
-          :inputBorderColor="inputBorderColor"
-          :inputBorderTipo="inputBorderTipo"
           :inputGrid="inputGrid"
         />
       </div>
@@ -190,13 +128,7 @@ import HomeView from "@/views/HomeView.vue";
 import InputGapTemplate from "@/components/templates/InputGapTemplate.vue";
 import InputQuantidadeTemplate from "@/components/templates/InputQuantidadeTemplate.vue";
 import InputQuantLinhasTemplate from "@/components/templates/InputQuantLinhasTemplate.vue";
-import InputLarguraBloco from "@/components/templates/InputLarguraBloco.vue";
-import InputAlturaBloco from "@/components/templates/InputAlturaBloco.vue";
-import InputBorderRadiusBloco from "@/components/templates/InputBorderRadiusBloco.vue";
-import InputBorderBloco from "@/components/templates/InputBorderBloco.vue";
 import InputPosicaoBloco from "@/components/templates/InputPosicaoBloco.vue";
-import InputBorderCorBloco from "@/components/templates/InputBorderCorBloco.vue";
-import InputBorderTipoBloco from "@/components/templates/InputBorderTipoBloco.vue";
 import InputContainerColor from "@/components/templates/InputContainerColor.vue";
 import InputGrid from "@/components/templates/InputGrid.vue";
 import image from "@/assets/logo-soften.webp";
@@ -207,15 +139,8 @@ export default {
     return {
       inputQuantidade: (this.inputQuantidade = "1"),
       inputQuantidadeLinha: (this.inputQuantidadeLinha = "1"),
-      inputBorderRadius: (this.inputBorderRadius = "6"),
-      inputRange: (this.inputRange = "100"),
-      valorHeight: (this.valorHeight = "125"),
       inputGap: (this.inputGap = "4"),
       checkValue: (this.checkValue = "center"),
-      inputColor: (this.inputColor = "#0F1923"),
-      inputBorder: (this.inputBorder = "0"),
-      inputBorderColor: (this.inputBorderColor = ""),
-      inputBorderTipo: (this.inputBorderTipo = "empty"),
       inputContainerColor: (this.inputContainerColor = "#E6E6E6"),
       inputGrid: (this.inputGrid = "hidden"),
       image: image,
@@ -224,8 +149,6 @@ export default {
       tabs: [
         { label: "Container", ref: "container-collapse", container: "initial" },
         { label: "Template", ref: "template-collapse" },
-        { label: "Bordas", ref: "border-collapse" },
-        { label: "Posições", ref: "position-collapse" },
       ],
     };
   },
@@ -234,13 +157,7 @@ export default {
     InputGapTemplate,
     InputQuantidadeTemplate,
     InputQuantLinhasTemplate,
-    InputLarguraBloco,
-    InputAlturaBloco,
     InputPosicaoBloco,
-    InputBorderRadiusBloco,
-    InputBorderBloco,
-    InputBorderCorBloco,
-    InputBorderTipoBloco,
     InputContainerColor,
     InputGrid,
   },
@@ -365,24 +282,6 @@ export default {
     getValorCampoQuantidadeLinha(valor) {
       this.inputQuantidadeLinha = valor;
       localStorage.setItem("quantidadeLinhas", JSON.stringify(valor));
-    },
-    getValorLarguraBloco(valor) {
-      this.inputRange = valor;
-    },
-    getValorAlturaBloco(valor) {
-      this.valorHeight = valor;
-    },
-    getValorRadiusBloco(valor) {
-      this.inputBorderRadius = valor;
-    },
-    getValorBorderBloco(valor) {
-      this.inputBorder = valor;
-    },
-    getValorBorderCorBloco(valor) {
-      this.inputBorderColor = valor;
-    },
-    getValorBorderTipoBloco(valor) {
-      this.inputBorderTipo = valor;
     },
     getValorContainerCor(valor) {
       this.inputContainerColor = valor;

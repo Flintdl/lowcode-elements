@@ -28,7 +28,7 @@ export default {
   data: () => {
     return {
       items: [
-        { label: "Nenhum Valor", value: "empty", disable: true },
+        { label: "Nenhum Valor", value: "initial", disable: true },
         { label: "Solid", value: "solid" },
         { label: "Dashed", value: "dashed" },
       ],

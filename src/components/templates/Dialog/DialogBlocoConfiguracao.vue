@@ -54,24 +54,16 @@
       :id="'template-collapse_' + cardId"
       :ref="'template-collapse_' + cardId"
     >
-      <ul class="sf-row sf-px-4">
-        <li
-          class="sf-col-12 sf-border-radius sf-bg-muted sf-p-2 sf-form-group sf-text-center"
-          v-for="(item, i) of itemGrid"
-          v-bind:key="i + item.order"
-        >
-          <span class="sf-font-weight-bold sf-text-info sf-mr-3">
-            <span class="sf-font-weight-extra-bold sf-text-default">
-              Elemento: &lt;{{ item.component }}/>
-            </span>
-          </span>
-          <span class="sf-font-weight-bold sf-text-info">
-            <span class="sf-font-weight-extra-bold sf-text-default">
-              Order: {{ item.order }}
-            </span>
-          </span>
-        </li>
-      </ul>
+      <div class="sf-row sf-px-4 sf-mb-3">
+        <div class="sf-col-12">
+          <!-- v-on:callbackFontProps="fontProps"
+            :idBloco="idBloco" -->
+          <TemplateBlocoCreate
+            :idBloco="idBloco"
+            v-on:callbackPropsBloco="propsBloco"
+          />
+        </div>
+      </div>
     </div>
     <Transition name="bounce">
       <div
@@ -138,6 +130,32 @@
         />
       </div>
     </div>
+    <div
+      class="sf-menu-ul sf-menu-content sf-pb-0"
+      :id="'grid-collapse_' + cardId"
+      :ref="'grid-collapse_' + cardId"
+    >
+      <ul class="sf-row sf-px-4">
+        <li
+          class="sf-col-12 sf-form-group sf-text-center"
+          v-for="(item, i) of itemGrid"
+          v-bind:key="i + item.order"
+        >
+          <div class="sf-border-radius sf-p-2 sf-bg-muted">
+            <span class="sf-font-weight-bold sf-text-info sf-mr-3">
+              <span class="sf-font-weight-extra-bold sf-text-default">
+                Elemento: &lt;{{ item.component }}/>
+              </span>
+            </span>
+            <span class="sf-font-weight-bold sf-text-info">
+              <span class="sf-font-weight-extra-bold sf-text-default">
+                Order: {{ item.order }}
+              </span>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </div>
     <!-- <svg id="svg">
       <line ref="line" id="line" />
     </svg> -->
@@ -145,6 +163,8 @@
 </template>
 
 <script>
+// Container Geral
+import TemplateBlocoCreate from "@/components/templates/Dialog/InputsDialog/TemplateBlocoCreate.vue";
 // Shadow
 import BoxShadowBlocoLateral from "@/components/templates/Dialog/InputsDialog/BoxShadowBlocoLateral.vue";
 import BoxShadowBlocoBottom from "@/components/templates/Dialog/InputsDialog/BoxShadowBlocoBottom.vue";
@@ -161,6 +181,8 @@ export default {
     idBloco: String,
   },
   components: {
+    // Container Geral
+    TemplateBlocoCreate,
     // Shadow
     BoxShadowBlocoLateral,
     BoxShadowBlocoBottom,
@@ -178,16 +200,17 @@ export default {
       itemGrid: [],
       tabsDialog: [
         {
-          label: "Template",
+          label: "Geral",
           ref: `template-collapse_${this.cardId}`,
           container: "initial",
         },
         {
-          label: "Shadows",
+          label: "Shadow",
           ref: `container-collapse_${this.cardId}`,
         },
-        { label: "Textos", ref: `texto-collapse_${this.cardId}` },
-        { label: "Imagens", ref: `border-collapse_${this.cardId}` },
+        { label: "Texto", ref: `texto-collapse_${this.cardId}` },
+        { label: "Imagem", ref: `border-collapse_${this.cardId}` },
+        { label: "Grid", ref: `grid-collapse_${this.cardId}` },
       ],
       shadowObject: {
         shadowLateral: (this.shadowLateral = "0"),
@@ -471,6 +494,7 @@ export default {
       this.shadowObject.shadowCor = "#000000";
       this.$emit("callbackAc", this.shadowObject);
     },
+    // Text Input
     insereTextCreated(valor) {
       this.$emit("callbackTextoInsereBloco", valor);
     },
@@ -483,7 +507,6 @@ export default {
     fontProps(font) {
       this.$emit("callbackFontProps", font);
     },
-    // Text Input
     // Imagem
     compartilhaImagem(valor) {
       this.$emit("callbackCompartilhaImagem", valor);
@@ -493,6 +516,9 @@ export default {
     },
     propsImageEmit(imagemProps) {
       this.$emit("callbackPropsImage", imagemProps);
+    },
+    propsBloco(propsBloco) {
+      this.$emit("callbackPropsBloco", propsBloco);
     },
   },
 };

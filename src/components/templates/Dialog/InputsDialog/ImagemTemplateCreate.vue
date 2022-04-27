@@ -252,18 +252,18 @@ export default {
 </script>
 
 <style lang="scss">
-input:invalid {
-  animation: shake 300ms;
-}
-@keyframes shake {
-  25% {
-    transform: translateX(4px);
-  }
-  50% {
-    transform: translateX(-4px);
-  }
-  100% {
-    transform: translateX(4px);
-  }
-}
+// input:invalid {
+//   animation: shake 300ms;
+// }
+// @keyframes shake {
+//   25% {
+//     transform: translateX(4px);
+//   }
+//   50% {
+//     transform: translateX(-4px);
+//   }
+//   100% {
+//     transform: translateX(4px);
+//   }
+// }
 </style>

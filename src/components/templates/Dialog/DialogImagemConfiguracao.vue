@@ -29,6 +29,7 @@
               :style="imagemPropsCSS"
               :src="imagemDataBase"
               :title="tituloImagem"
+              loading="lazy"
               width="100%"
             />
           </div>
@@ -185,6 +186,7 @@
                   <input
                     type="range"
                     @input="onSelectProps"
+                    :disabled="imagemProps.styles.margin.auto"
                     class="input-range-tickes-bulk"
                     v-model="imagemProps.styles.margin.marginRight"
                   />
@@ -227,6 +229,7 @@
                   <input
                     type="range"
                     @input="onSelectProps"
+                    :disabled="imagemProps.styles.margin.auto"
                     class="input-range-tickes-bulk"
                     v-model="imagemProps.styles.margin.marginLeft"
                   />
@@ -251,8 +254,8 @@ export default {
         id: this.idBlocoImagem,
         styles: {
           borderRadius: "0",
-          width: "100",
-          height: "0",
+          width: "50",
+          height: "fit-content",
           margin: {
             auto: true,
             marginTop: "0",

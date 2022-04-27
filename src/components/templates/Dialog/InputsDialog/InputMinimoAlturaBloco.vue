@@ -2,14 +2,14 @@
   <div
     class="sf-col-6 sf-form-group sf-justify-content-between sf-display-flex sf-flex-wrap"
   >
-    <label class="sf-label">Altura</label>
+    <label class="sf-label">Altura Mínima</label>
     <span class="sf-font-weight-bold sf-text-muted">
-      {{ valorInput > 0 ? valorInput + " Pixels" : "Auto" }}
+      {{ valorInput }} Pixels
     </span>
     <input
       type="range"
       min="0"
-      max="1500"
+      max="500"
       id="valorHeight"
       @input="porcentagemRange($event, 'height')"
       v-model="valor"
@@ -47,7 +47,7 @@ export default {
           conversorQuantidade = "";
           break;
         case "height":
-          conversorQuantidade = "/ 15";
+          conversorQuantidade = "/ 5";
           break;
         default:
           conversorQuantidade = "* 2";

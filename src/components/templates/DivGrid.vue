@@ -1,7 +1,21 @@
 <template>
   <div
-    class="sf-position-relative sf-p-3 sf-tooltip-actions-hover"
-    :style="[cssDefinido, styleComputed]"
+    class="sf-position-relative sf-p-3 sf-tooltip-actions-hover sf-overflow-auto"
+    :style="[
+      cssDefinido,
+      styleComputed,
+      {
+        width: widthGRID + '%',
+        height: heightGRID,
+        'min-height': minHeightGRID + 'px',
+        'max-height': maxHeightGRID + 'px',
+        'background-color': backgroundColorGRID,
+        margin: posicaoGRID,
+        'border-radius': borderRadiusGRID + 'px',
+        border:
+          borderWidthGRID + 'px' + ' ' + borderTipoGRID + ' ' + borderColorGRID,
+      },
+    ]"
     :ref="idBloco"
   >
     <div class="sf-row" v-if="textObject.length || imagemObject.length">
@@ -32,7 +46,7 @@
           data-bind-grid-tag
           :src="imagem.dataBase"
           :title="imagem.titulo"
-          width="100%"
+          style="max-width: 250px; height: fit-content; margin: auto"
           :ref="'Img_' + imagem.id"
         />
       </div>
@@ -53,6 +67,7 @@
           v-on:callbackPropsImage="propsImageEmit"
           v-on:callbackCompartilhaImagem="insereImagem"
           v-on:callbackRemoveImagem="removeImagem"
+          v-on:callbackPropsBloco="propsBloco"
           v-on:callbackAc="getValorCampoAc"
           :class="componentMinimized"
         />
@@ -86,6 +101,16 @@ export default {
       shadowCor: this.shadowCor,
       textObject: [],
       imagemObject: [],
+      widthGRID: "100",
+      heightGRID: "fit-content",
+      minHeightGRID: "150",
+      maxHeightGRID: "250",
+      borderRadiusGRID: "4",
+      borderWidthGRID: "0",
+      borderTipoGRID: "initial",
+      borderColorGRID: "#ffffff00",
+      posicaoGRID: "0 auto",
+      backgroundColorGRID: "#FFFFFF",
     };
   },
   props: {
@@ -93,7 +118,6 @@ export default {
     tamanho: String,
     idBloco: String,
     altura: String,
-    background: String,
   },
   components: {
     DialogBlocoConfiguracao,
@@ -251,7 +275,6 @@ export default {
       });
     },
     propsImageEmit(imagem) {
-      console.log(imagem);
       this.imagemObject.forEach((element) => {
         if (imagem.id === String(element.id)) {
           var elementFind = this.$refs["Img_" + element.id];
@@ -283,11 +306,23 @@ export default {
       this.shadowExpanse = valor.shadowExpanse;
       this.shadowCor = valor.shadowCor;
     },
+    propsBloco(propsBloco) {
+      this.widthGRID = propsBloco.width;
+      this.heightGRID =
+        propsBloco.height > 0 ? propsBloco.height + "px" : "auto";
+      this.minHeightGRID = propsBloco.minheight;
+      this.maxHeightGRID = propsBloco.maxheight;
+      this.posicaoGRID = propsBloco.posicao;
+      this.backgroundColorGRID = propsBloco.backgroundColor;
+      this.borderRadiusGRID = propsBloco.bordas.borderRadius;
+      this.borderWidthGRID = propsBloco.bordas.borderWidth;
+      this.borderTipoGRID = propsBloco.bordas.borderTipo;
+      this.borderColorGRID = propsBloco.bordas.borderColor;
+    },
   },
   computed: {
     styleComputed() {
       return {
-        "background-color": this.background,
         "box-shadow": `
           ${this.shadowLateral ? this.shadowLateral : "1"}px
           ${this.shadowBottom ? this.shadowBottom : "2"}px

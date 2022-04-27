@@ -2,9 +2,9 @@
   <div
     class="sf-col-6 sf-form-group sf-justify-content-between sf-display-flex sf-flex-wrap"
   >
-    <label class="sf-label">Altura</label>
+    <label class="sf-label">Altura Máxima</label>
     <span class="sf-font-weight-bold sf-text-muted">
-      {{ valorInput > 0 ? valorInput + " Pixels" : "Auto" }}
+      {{ valorInput }} Pixels
     </span>
     <input
       type="range"

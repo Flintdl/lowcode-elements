@@ -596,4 +596,30 @@ input[type="color"]::-webkit-color-swatch {
   input[type="range"].input-range-tickes-bulk:active::-webkit-slider-thumb {
     background: #fff;
   }
+
+  input[type="range"].input-range-tickes-bulk:disabled {
+    &:after {
+      content: "";
+      background: $buttonDisableBgColor;
+    }
+
+    &:active.input-range-tickes-bulk:after,
+    &:hover.input-range-tickes-bulk:after {
+      content: "";
+      background: $buttonDisableBgColor;
+      box-shadow: 10px 0 0 $buttonDisableBgColor, 20px 0 0 $buttonDisableBgColor,
+        30px 0 0 $buttonDisableBgColor, 40px 0 0 $buttonDisableBgColor,
+        50px 0 0 $buttonDisableBgColor, 60px 0 0 $buttonDisableBgColor,
+        70px 0 0 $buttonDisableBgColor, 80px 0 0 $buttonDisableBgColor,
+        90px 0 0 $buttonDisableBgColor, 100px 1px 0 rgb(235 235 235),
+        90px 1px 0 rgb(235 235 235), 120px 1px 0 rgb(255 255 255),
+        150px 1px 0 rgb(235 235 235), 180px 1px 0 rgb(235 235 235),
+        210px 1px 0 rgb(235 235 235), 240px 1px 0 rgb(235 235 235),
+        270px 1px 0 rgb(235 235 235);
+    }
+  }
+  input[type="range"].input-range-tickes-bulk:disabled::-webkit-slider-thumb {
+    background: $buttonDisableBgColor;
+    border: 1px solid $buttonDisableBgColor;
+  }
 }
