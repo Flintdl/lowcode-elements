@@ -198,7 +198,7 @@ export default {
     containerCss() {
       return {
         "background-color": this.inputContainerColor,
-        height: "100vh",
+        "min-height": "100vh",
       };
     },
   },
