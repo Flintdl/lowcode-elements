@@ -388,6 +388,11 @@ export default {
           case "leftCase":
             divResize.className +=
               " sf-drop-dialog-content sf-drop-dialog-left";
+            if (document.querySelector(".preview-Drop")) {
+              document
+                .querySelector(".preview-Drop")
+                .remove(document.querySelector(".preview-Drop"));
+            }
             break;
           case "CancelLeftCase":
             divResize.classList.remove("sf-drop-dialog");
@@ -401,6 +406,11 @@ export default {
             divResize.style.height = "100%";
             document.querySelector(".sf-content-page").style.marginRight =
               "30rem";
+            if (document.querySelector(".preview-drop-dashed")) {
+              document
+                .querySelector(".preview-drop-dashed")
+                .remove(document.querySelector(".preview-drop-dashed"));
+            }
             break;
           case "CancelrightCase":
             document.querySelector(".sf-content-page").style.marginRight =

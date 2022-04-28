@@ -480,6 +480,11 @@ export default {
           document.body.offsetLeft - 50
         ) {
           divResize.className += " sf-drop-dialog sf-drop-dialog-left";
+          if (document.querySelector(".preview-Drop")) {
+            document
+              .querySelector(".preview-Drop")
+              .remove(document.querySelector(".preview-Drop"));
+          }
         } else {
           divResize.classList.remove("sf-drop-dialog");
           divResize.classList.remove("sf-drop-dialog-left");

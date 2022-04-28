@@ -26,6 +26,7 @@
               v-bind:key="n"
               :ref="'bloco_' + n"
               :idReferencia="n"
+              :id="'container_' + n"
               v-for="n of quantidade"
               :altura="String(valorHeight)"
               :idBloco="'container_' + n"
@@ -36,17 +37,43 @@
           </TransitionGroup>
         </div>
 
-        <!-- <pre class="language-markup">
-        <code id="preview-code" class="language-markup">
-         <div>aaaa</div>
-        </code>
-      </pre> -->
+        <div class="sf-container-preview">
+          <pre v-if="htmlPreviewCode.length" class="language-markup">
+  <code id="preview-code-html" class="language-markup" style="user-select: text!important">
+    <span v-for="(hpc, i) of htmlPreviewCode" v-bind:key="i">
+    {{hpc.tagInicial}}
+    <span v-for="(tag, j) of hpc.tagTag" v-bind:key="j" style="line-height: 1 !important">
+      {{tag.tag}}
+    </span>
+    {{hpc.tagFinal}}
+    </span>
+  </code>
+</pre>
+          <pre v-if="cssPropsGeneration.length" class="language-css">
+  <code id="preview-code" class="language-css" style="user-select: text!important">
+      <span v-for="(styleprops, i) of cssPropsGeneration" v-bind:key="'a'+i" style="user-select: text!important">
+    #{{styleprops.id}} {
+      width: {{styleprops.style.width}}px;
+      overflow: auto;
+      padding: 1.5rem;
+      box-shadow: {{styleprops.style.boxShadow}};
+      min-height: {{styleprops.style.minHeight}};
+      height: {{styleprops.style.height}};
+      max-height: {{styleprops.style.maxHeight}};
+      background-color: {{styleprops.style.backgroundColor}};
+      margin: {{styleprops.style.margin}};
+      border-radius: {{styleprops.style.borderRadius}};
+    }
+      </span>
+  </code>
+</pre>
+        </div>
       </div>
-      <!-- <div class="sf-col-12 sf-mt-3 sf-display-flex sf-justify-content-end">
+      <div class="sf-col-12 sf-mt-3 sf-display-flex sf-justify-content-end">
         <button class="sf-btn sf-btn-primary" @click="gerarCodigo">
           Gerar Codigo
         </button>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -55,22 +82,29 @@
 // @ is an alias to /src
 
 import DivGrid from "@/components/templates/DivGrid.vue";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism-okaidia.min.css";
+import Prism from "prismjs";
+import "prismjs/themes/prism-okaidia.min.css";
 
 export default {
   name: "HomeView",
   data: function () {
     return {
-      htmlPreviewCode: null,
+      htmlPreviewCode: [],
       gridLinhas: null,
       valorRecalculado: null,
       arroz: null,
+      widthGeneration: null,
+      cssPropsGeneration: [],
     };
   },
   components: {
     DivGrid,
   },
+  mounted() {
+    window.Prism = window.Prism || {};
+    window.Prism.manual = true;
+  },
+
   props: {
     inputGap: String,
     quantidade: Number,
@@ -98,9 +132,75 @@ export default {
   },
   methods: {
     gerarCodigo() {
-      this.htmlPreviewCode = true;
-      document.getElementById("preview-code").innerHTML =
-        document.getElementById("sf-preview-code").innerHTML;
+      // var containerGRID = document.querySelector(`.sf-display-grid`).innerHTML;
+
+      if (localStorage.getItem("textLabelBloco")) {
+        var listaGet = JSON.parse(localStorage.getItem("textLabelBloco")) || [];
+        listaGet.forEach((element, index) => {
+          var containerID = document.querySelector(`#${element.container_id}`);
+          if (containerID) {
+            var containerComputed = getComputedStyle(containerID);
+            var el = this.htmlPreviewCode[index] || {
+              tagInicial: "",
+              tagTag: [],
+              tagFinal: "",
+            };
+
+            el.tagInicial = `<div id="${element.container_id}"><div class="sf-row">`;
+            element.props.forEach((element) => {
+              console.log(this.htmlPreviewCode);
+              el.tagTag.push({
+                tag:
+                  element &&
+                  `<div class='sf-col-12'><${element.tag}>${element.texto}</${element.tag}></div>`,
+                // "<div class='sf-col-12'>" +
+                //   "<" +
+                //   element.tag +
+                //   ">" +
+                //   element.texto +
+                //   "</" +
+                //   element.tag +
+                //   ">" +
+                //   "</div>",
+              });
+            });
+            el.tagFinal = `</div></div>`;
+
+            this.htmlPreviewCode[index] = el;
+
+            console.log(JSON.stringify(this.htmlPreviewCode));
+
+            var boxShadow = containerComputed.getPropertyValue("box-shadow");
+            var minHeight = containerComputed.getPropertyValue("min-height");
+            var height = containerComputed.getPropertyValue("height");
+            var maxHeight = containerComputed.getPropertyValue("max-height");
+            var backgroundColor =
+              containerComputed.getPropertyValue("background-color");
+            var margin = containerComputed.getPropertyValue("margin");
+            var borderRadius =
+              containerComputed.getPropertyValue("border-radius");
+            var width = containerID.offsetWidth;
+
+            this.cssPropsGeneration.push({
+              id: element.container_id,
+              style: {
+                width: width,
+                boxShadow: boxShadow,
+                minHeight: minHeight,
+                height: height,
+                maxHeight: maxHeight,
+                backgroundColor: backgroundColor,
+                margin: margin,
+                borderRadius: borderRadius,
+              },
+            });
+          }
+        });
+      }
+
+      setTimeout(() => {
+        Prism.highlightAll();
+      }, 50);
     },
   },
 };
@@ -134,5 +234,9 @@ export default {
   border-left: 2px solid #ff008c38;
   border-right: 2px solid #ff008c38;
   position: absolute;
+}
+code[class*="language-markup"],
+pre[class*="language-markup"] {
+  line-height: 0.9;
 }
 </style>
